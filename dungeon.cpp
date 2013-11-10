@@ -1,8 +1,12 @@
 #include <ncurses.h>
+#include "map.h"
 
 int main(){
+    // Declarations
+    Map map;
+
     initscr();
-    mvprintw(10,10, "Hello World");
+    map.drawMap();
 
     refresh();
     getch();
