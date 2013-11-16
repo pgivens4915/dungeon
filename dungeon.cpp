@@ -4,6 +4,7 @@
 int main(){
     // Declarations
     Map map;
+    WINDOW *mainWindow;
 
     initscr();
     map.drawMap();
