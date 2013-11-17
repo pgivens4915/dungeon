@@ -21,6 +21,12 @@ int main(){
   refresh();
   // Waiting for input
   getch();
+  rat.step();
+  map.drawMap(mainWindow);
+  rat.drawCreature(mainWindow);
+  refresh();
+  getch();
+  
   endwin();
 
   return 0;
