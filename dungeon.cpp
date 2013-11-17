@@ -2,17 +2,23 @@
 #include "map.h"
 
 int main(){
-    // Declarations
-    Map map;
-    WINDOW *mainWindow;
+  // Declarations
+  Map map;
+  WINDOW *mainWindow;
+  int retval;
 
-    mainWindow = initscr();
-    map.drawMap(mainWindow);
+  retval = map.initMap();
+  if(retval != 0){
+    return(1);
+  }
 
-    refresh();
-    // Waiting for input
-    getch();
-    endwin();
+  mainWindow = initscr();
+  map.drawMap(mainWindow);
 
-    return 0;
+  refresh();
+  // Waiting for input
+  getch();
+  endwin();
+
+  return 0;
 }
