@@ -2,7 +2,7 @@
 #include "map.h"
 
 // Prints out the entire map
-int Map::drawMap(){
+int Map::drawMap(WINDOW* window){
   // Declarations
   int maxX = 0;
   int maxY = 0;
@@ -12,13 +12,13 @@ int Map::drawMap(){
   map[0][2] = 'P';
 
   //Getting the terminal size
-  //getmaxyx(NULL,maxX,maxY);
-  printf("DEBUG %i %i\n", maxX, maxY);
+  getmaxyx(window, maxY, maxX);
   // Prints out the entirity of the map array
   // This might exceed the terminal size
-  for(int i = 0; i < height; i++){
-    for(int j = 0; j < width; j++){
+  for(int i = 0; (i < height) && (i < maxY); i++){
+    for(int j = 0; (j < width) && (j < maxX); j++){
       mvaddch(i,j, map[i][j]);
     }    
   }
+  // mvprintw(2,0,"DEBUG %i %i", maxX, maxY);
 }

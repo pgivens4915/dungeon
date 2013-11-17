@@ -6,10 +6,11 @@ int main(){
     Map map;
     WINDOW *mainWindow;
 
-    initscr();
-    map.drawMap();
+    mainWindow = initscr();
+    map.drawMap(mainWindow);
 
     refresh();
+    // Waiting for input
     getch();
     endwin();
 

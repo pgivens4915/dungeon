@@ -1,11 +1,12 @@
 #include <ncurses.h>
 
 int main(){
-    initscr();
-    printw("Hello World");
-    refresh();
-    getch();
-    endwin();
+  WINDOW* mainWindow;
+  mainWindow = initscr();
+  printw("Hello World");
+  refresh();
+  getch();
+  endwin();
 
-    return 0;
+  return 0;
 }

@@ -3,7 +3,7 @@
 
 class Map{
     public:
-      int drawMap();
+      int drawMap(WINDOW* window);
     private:
       // The height and width of the map
       const static char width = 100;
