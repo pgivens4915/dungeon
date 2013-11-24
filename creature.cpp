@@ -1,6 +1,7 @@
 #include <ncurses.h>
-#include "creature.h"
 #include <cmath>
+#include <climits>
+#include "creature.h"
 
 struct Tile{
   int x;
@@ -16,6 +17,7 @@ struct Tile{
 };
 
 int estimate(int x, int y, int targetX, int targetY);
+struct Tile* lowestCost(std::list<struct Tile>* openList);
 
 int Creature::drawCreature(WINDOW* window){
   mvaddch(y, x, blit);
@@ -55,19 +57,21 @@ int Creature::step(){
 int Creature::move(int TargetX,int TargetY){
     std::list<struct Tile> openList;
     std::list<struct Tile> closedList;
-    struct Tile currentTile;
-    currentTile.x = x;
-    currentTile.y = y;
-    currentTile.cost = 0;
-    currentTile.H = estimate(x, y, TargetX, TargetY);
-    currentTile.G = 0;
-    currentTile.F = currentTile.H + currentTile.G;
-    currentTIle.parent = NULL;
+    // Becuase I dont want to malloc =)
+    struct Tile aTile;
+    struct Tile* currentTile = &aTile;
+    currentTile->x = x;
+    currentTile->y = y;
+    currentTile->cost = 0;
+    currentTile->H = estimate(x, y, TargetX, TargetY);
+    currentTile->G = 0;
+    currentTile->F = currentTile->H + currentTile->G;
+    currentTile->parent = NULL;
     
-    openList.push_front(currentTile);
+    openList.push_front(*currentTile);
 
     // While we are not there or we have no options left
-    while((currentTile.x != x && currentTile.y != y) || openList.empty()){
+    while((currentTile->x != x && currentTile->y != y) || openList.empty()){
       currentTile = lowestCost(&openList);
 
     }
@@ -82,4 +86,21 @@ int estimate(int x, int y, int targetX, int targetY){
 }
 
 // Returns the lowest cost tile in the open list
-struct Tile* lowestCost(  
+struct Tile* lowestCost(std::list<struct Tile>* openList){
+  std::list<struct Tile>::iterator it; 
+
+  // Initiate the largest tile, in this case zero
+  struct Tile smallestMalloc;
+  struct Tile* smallest = &smallestMalloc;
+  smallest->F = INT_MAX;
+
+  // For every item on the list
+  for(it = openList->begin(); it != openList->end(); it++){
+    if (it->F < smallest->F){
+      // Pointer assignment, smallest should point to a member of the 
+      // list that was passed in
+      smallest = &(*it);
+    }
+  }
+  return(smallest);
+}
