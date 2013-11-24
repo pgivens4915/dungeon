@@ -17,7 +17,9 @@ struct Tile{
 };
 
 int estimate(int x, int y, int targetX, int targetY);
-struct Tile* lowestCost(std::list<struct Tile>* openList);
+void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
+                  Map* map, int targetX, int targetY);
+std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
 
 int Creature::drawCreature(WINDOW* window){
   mvaddch(y, x, blit);
@@ -54,16 +56,17 @@ int Creature::step(){
   return(0);
 }
 
-int Creature::move(int TargetX,int TargetY){
+int Creature::move(int targetX, int targetY, Map* map){
     std::list<struct Tile> openList;
     std::list<struct Tile> closedList;
+    std::list<struct Tile>::iterator iterator; 
     // Becuase I dont want to malloc =)
     struct Tile aTile;
     struct Tile* currentTile = &aTile;
     currentTile->x = x;
     currentTile->y = y;
     currentTile->cost = 0;
-    currentTile->H = estimate(x, y, TargetX, TargetY);
+    currentTile->H = estimate(x, y, targetX, targetY);
     currentTile->G = 0;
     currentTile->F = currentTile->H + currentTile->G;
     currentTile->parent = NULL;
@@ -72,9 +75,35 @@ int Creature::move(int TargetX,int TargetY){
 
     // While we are not there or we have no options left
     while((currentTile->x != x && currentTile->y != y) || openList.empty()){
-      currentTile = lowestCost(&openList);
+      // Get the position that we want to delete, it is the lowest cost
+      // square
+      iterator = lowestCost(&openList);
+      // Delete that node
+      openList.erase(iterator);
+      closedList.push_front(*iterator);
+      currentTile = &(*iterator);
+      // Adds the neighbors of the tile to the open list
+      addNeighbors(currentTile, &openList, map, targetX, targetY);
 
     }
+}
+
+void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
+                  Map* map, int targetX, int targetY){
+  struct Tile newTile;
+  for(int i = -1; i < 2; i++){
+    for(int j = -1; j < 2; j++){
+      if(i != j && map->map[i][j] != 'X')
+        newTile.x = currentTile->x + j;
+        newTile.y = currentTile->y + i;
+        newTile.cost = 1;
+        newTile.G = newTile.cost + currentTile->cost;
+        newTile.H = estimate(newTile.x, newTile.y, targetX, targetY);
+        newTile.F = newTile.G + newTile.H;
+        openList->push_front(newTile);
+    }
+  }
+
 }
 
 // Calcuating the estimate for a*
@@ -86,8 +115,9 @@ int estimate(int x, int y, int targetX, int targetY){
 }
 
 // Returns the lowest cost tile in the open list
-struct Tile* lowestCost(std::list<struct Tile>* openList){
+std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
   std::list<struct Tile>::iterator it; 
+  std::list<struct Tile>::iterator iteratorPosition; 
 
   // Initiate the largest tile, in this case zero
   struct Tile smallestMalloc;
@@ -100,7 +130,8 @@ struct Tile* lowestCost(std::list<struct Tile>* openList){
       // Pointer assignment, smallest should point to a member of the 
       // list that was passed in
       smallest = &(*it);
+      iteratorPosition = it;
     }
   }
-  return(smallest);
+  return(iteratorPosition);
 }

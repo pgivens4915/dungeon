@@ -3,6 +3,7 @@
 
 #include <queue>
 #include <list>
+#include "map.h"
 #define MAX_PATH 5000
 
 class Creature{
@@ -14,7 +15,7 @@ class Creature{
     int drawCreature(WINDOW* window);
     // Takes one step 
     int step();
-    int move(int x, int y);
+    int move(int x, int y, Map* map);
     
 
   private:
