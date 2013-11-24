@@ -109,6 +109,7 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
   struct Tile newTile;
   bool onOpenList;
   bool onClosedList;
+  std::list<struct Tile>::iterator it;
   for(int i = -1; i < 2; i++){
     for(int j = -1; j < 2; j++){
       // Checking to see if on lists
@@ -119,15 +120,37 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
 
       // If it is not the current tile, passalbe, and not on the list
       // That means the node is new
-      if(i != j && map->map[i][j] != 'X' && !onClosedList && !onOpenList)
+      // We add it to the open list if that was the case
+      if(i != j && map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
+          !onClosedList && !onOpenList){
+
         newTile.x = currentTile->x + j;
         newTile.y = currentTile->y + i;
         newTile.cost = 1;
         newTile.G = newTile.cost + currentTile->cost;
         newTile.H = estimate(newTile.x, newTile.y, targetX, targetY);
         newTile.F = newTile.G + newTile.H;
+        newTile.parent = currentTile;
         openList->push_front(newTile);
+      }
+      // Else if it is on the open list make sure we have the shortest cost 
+      else if(i != j, 
+              map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
+              !onClosedList){
+
+        // Find the right item
+        for(it = openList->begin(); it != openList->end(); it++){
+          // If it matches the x y coord
+          if((*it).x == currentTile->x + j && (*it).y == currentTile->y + i){
+            // If we have found a shorter path
+            if((*it).G > currentTile->cost + 1){
+              (*it).G = currentTile->cost + 1;
+            }
+          }
+        }
+      }
     }
+
   }
 
 }
