@@ -38,6 +38,7 @@ int main(){
 int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map){
   std::list<Creature*>::iterator i;
   int retVal;
+  char c;
 
   // Move the creatures
   for(i = creatureList.begin(); i != creatureList.end(); ++i){
@@ -54,6 +55,8 @@ int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map){
   }
   refresh();
   // Waiting for input
-  getch();
+  do {
+      c = getch();
+  } while (c != '.');
 
 }
