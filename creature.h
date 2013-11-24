@@ -2,6 +2,7 @@
 #define CREATURE
 
 #include <queue>
+#include <list>
 #define MAX_PATH 5000
 
 class Creature{
@@ -13,7 +14,8 @@ class Creature{
     int drawCreature(WINDOW* window);
     // Takes one step 
     int step();
-    //int move(int x, int y);
+    int move(int x, int y);
+    
 
   private:
     std::queue<int> path;
