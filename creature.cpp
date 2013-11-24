@@ -18,7 +18,9 @@ struct Tile{
 
 int estimate(int x, int y, int targetX, int targetY);
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-                  Map* map, int targetX, int targetY);
+                  std::list<struct Tile>* closedlist, Map* map, int targetX, 
+                  int targetY);
+
 std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
 
 int Creature::drawCreature(WINDOW* window){
@@ -83,17 +85,41 @@ int Creature::move(int targetX, int targetY, Map* map){
       closedList.push_front(*iterator);
       currentTile = &(*iterator);
       // Adds the neighbors of the tile to the open list
-      addNeighbors(currentTile, &openList, map, targetX, targetY);
+      addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
 
     }
 }
 
+// Check a list to see if it contains a tile object at x,y
+bool contains(std::list<struct Tile>* list, int x, int y){
+  std::list<struct Tile>::iterator it;
+  for(it = list->begin(); it != list->end(); it++){
+    if((*it).x == x && (*it).y == y){
+      return true;
+    }
+  }
+  return false;
+}
+
+// Add all proximal neighbors to a list
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-                  Map* map, int targetX, int targetY){
+                  std::list<struct Tile>* closedList, Map* map, int targetX, 
+                  int targetY){
+
   struct Tile newTile;
+  bool onOpenList;
+  bool onClosedList;
   for(int i = -1; i < 2; i++){
     for(int j = -1; j < 2; j++){
-      if(i != j && map->map[i][j] != 'X')
+      // Checking to see if on lists
+      onOpenList   = contains(openList, currentTile->x + j, 
+          currentTile->y + i);
+      onClosedList = contains(closedList, currentTile->x + j, 
+          currentTile->y + i);
+
+      // If it is not the current tile, passalbe, and not on the list
+      // That means the node is new
+      if(i != j && map->map[i][j] != 'X' && !onClosedList && !onOpenList)
         newTile.x = currentTile->x + j;
         newTile.y = currentTile->y + i;
         newTile.cost = 1;
