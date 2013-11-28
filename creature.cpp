@@ -3,6 +3,8 @@
 #include <climits>
 #include "creature.h"
 
+FILE* logg;
+
 struct Tile{
   int x;
   int y;
@@ -19,8 +21,8 @@ struct Tile{
 int estimate(int x, int y, int targetX, int targetY);
 void returnPath(struct Tile* currentTile);
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-                  std::list<struct Tile>* closedlist, Map* map, int targetX, 
-                  int targetY);
+    std::list<struct Tile>* closedlist, Map* map, int targetX, 
+    int targetY);
 
 std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
 
@@ -33,12 +35,6 @@ Creature::Creature(int inX, int inY, char inBlit){
   x = inX;
   y = inY;
   blit = inBlit;
-  path.push(1001); 
-  path.push(1002);
-  path.push(1003);
-  path.push(2003);
-  path.push(2004);
-  path.push(2005);
 }
 
 int Creature::step(){
@@ -60,36 +56,36 @@ int Creature::step(){
 }
 
 int Creature::move(int targetX, int targetY, Map* map){
-    std::list<struct Tile> openList;
-    std::list<struct Tile> closedList;
-    std::list<struct Tile>::iterator iterator; 
-    // Becuase I dont want to malloc =)
-    struct Tile aTile;
-    struct Tile* currentTile = &aTile;
-    currentTile->x = x;
-    currentTile->y = y;
-    currentTile->cost = 0;
-    currentTile->H = estimate(x, y, targetX, targetY);
-    currentTile->G = 0;
-    currentTile->F = currentTile->H + currentTile->G;
-    currentTile->parent = NULL;
-    
-    openList.push_front(*currentTile);
+  std::list<struct Tile> openList;
+  std::list<struct Tile> closedList;
+  std::list<struct Tile>::iterator iterator; 
+  // Becuase I dont want to malloc =)
+  struct Tile aTile;
+  struct Tile* currentTile = &aTile;
+  currentTile->x = x;
+  currentTile->y = y;
+  currentTile->cost = 0;
+  currentTile->H = estimate(x, y, targetX, targetY);
+  currentTile->G = 0;
+  currentTile->F = currentTile->H + currentTile->G;
+  currentTile->parent = NULL;
 
-    // While we are not there or we have no options left
-    while((currentTile->x != x && currentTile->y != y) || openList.empty()){
-      // Get the position that we want to delete, it is the lowest cost
-      // square
-      iterator = lowestCost(&openList);
-      // Delete that node
-      openList.erase(iterator);
-      closedList.push_front(*iterator);
-      currentTile = &(*iterator);
-      // Adds the neighbors of the tile to the open list
-      addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
+  openList.push_front(*currentTile);
 
-    }
-    returnPath(currentTile);
+  // While we are not there or we have no options left
+  while(!(currentTile->x == targetX && currentTile->y == targetY) || openList.empty()){
+    // Get the position that we want to delete, it is the lowest cost
+    // square
+    iterator = lowestCost(&openList);
+    // Delete that node
+    openList.erase(iterator);
+    closedList.push_front(*iterator);
+    currentTile = &(*iterator);
+    // Adds the neighbors of the tile to the open list
+    addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
+
+  }
+  returnPath(currentTile);
 }
 
 // Returns the path constructed from A*
@@ -104,7 +100,8 @@ void Creature::returnPath(struct Tile* currentTile){
     // The path data structure consists of a int split so xxxyyy
     combo = (stepX * 1000) + stepY;
     path.push(combo);
-    
+    currentTile = currentTile->parent;
+
   }
 }
 
@@ -121,8 +118,8 @@ bool contains(std::list<struct Tile>* list, int x, int y){
 
 // Add all proximal neighbors to a list
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-                  std::list<struct Tile>* closedList, Map* map, int targetX, 
-                  int targetY){
+    std::list<struct Tile>* closedList, Map* map, int targetX, 
+    int targetY){
 
   struct Tile newTile;
   bool onOpenList;
@@ -153,14 +150,16 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
       }
       // Else if it is on the open list make sure we have the shortest cost 
       else if(i != j, 
-              map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
-              !onClosedList){
+          map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
+          !onClosedList){
 
+        fprintf(logg, "On open list\n");
         // Find the right item
         for(it = openList->begin(); it != openList->end(); it++){
           // If it matches the x y coord
           if((*it).x == currentTile->x + j && (*it).y == currentTile->y + i){
             // If we have found a shorter path
+            fprintf(logg, "found somethig\n");
             if((*it).G > currentTile->cost + 1){
               (*it).G = currentTile->cost + 1;
             }

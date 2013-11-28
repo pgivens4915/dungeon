@@ -10,7 +10,7 @@ int main(){
   int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map);
   Map map;
   WINDOW *mainWindow;
-  Creature rat(3,3,'r');
+  Creature rat(2,2,'r');
   int retval;
   std::list<Creature*> creatureList;
 
@@ -24,6 +24,11 @@ int main(){
   creatureList.push_front(&rat);
 
   fprintf(log, "DEBUG\n");// DEBUG
+  
+  // Init section
+  rat.move(10,5, &map);
+  // End init section
+  
 
   for(;;){
     gameStep(mainWindow, creatureList, map);
