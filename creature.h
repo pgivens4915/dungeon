@@ -1,7 +1,7 @@
 #ifndef CREATURE
 #define CREATURE
 
-#include <queue>
+#include <stack>
 #include <list>
 #include "map.h"
 #define MAX_PATH 5000
@@ -16,10 +16,11 @@ class Creature{
     // Takes one step 
     int step();
     int move(int x, int y, Map* map);
+    void returnPath(struct Tile* currentTile);
     
 
   private:
-    std::queue<int> path;
+    std::stack<int> path;
     int x;
     int y;
     char blit;

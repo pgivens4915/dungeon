@@ -17,6 +17,7 @@ struct Tile{
 };
 
 int estimate(int x, int y, int targetX, int targetY);
+void returnPath(struct Tile* currentTile);
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
                   std::list<struct Tile>* closedlist, Map* map, int targetX, 
                   int targetY);
@@ -43,13 +44,13 @@ Creature::Creature(int inX, int inY, char inBlit){
 int Creature::step(){
   int ret = 0;
 
-  // Return if the queue is empty
+  // Return if the stack is empty
   if(path.empty()){
     return(-1);
   }
 
-  // Getting (x,y) from the queue
-  ret = path.front();
+  // Getting (x,y) from the stack
+  ret = path.top();
   path.pop();
   // The top part of ret is x and the bottom is y
   // For example 120021 x = 120 y = 21
@@ -88,6 +89,23 @@ int Creature::move(int targetX, int targetY, Map* map){
       addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
 
     }
+    returnPath(currentTile);
+}
+
+// Returns the path constructed from A*
+void Creature::returnPath(struct Tile* currentTile){
+  // Declarations
+  int stepX;
+  int stepY;
+  int combo;
+  while(currentTile->parent != NULL){
+    stepX = currentTile->x;
+    stepY = currentTile->y;
+    // The path data structure consists of a int split so xxxyyy
+    combo = (stepX * 1000) + stepY;
+    path.push(combo);
+    
+  }
 }
 
 // Check a list to see if it contains a tile object at x,y
