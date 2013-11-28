@@ -56,6 +56,7 @@ int Creature::step(){
 }
 
 int Creature::move(int targetX, int targetY, Map* map){
+  logg = fopen("astar.log", "w");
   std::list<struct Tile> openList;
   std::list<struct Tile> closedList;
   std::list<struct Tile>::iterator iterator; 
@@ -142,7 +143,7 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         newTile.x = currentTile->x + j;
         newTile.y = currentTile->y + i;
         newTile.cost = 1;
-        newTile.G = newTile.cost + currentTile->cost;
+        newTile.G = newTile.cost + currentTile->G;
         newTile.H = estimate(newTile.x, newTile.y, targetX, targetY);
         newTile.F = newTile.G + newTile.H;
         newTile.parent = currentTile;
@@ -159,9 +160,13 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
           // If it matches the x y coord
           if((*it).x == currentTile->x + j && (*it).y == currentTile->y + i){
             // If we have found a shorter path
-            fprintf(logg, "found somethig\n");
-            if((*it).G > currentTile->cost + 1){
-              (*it).G = currentTile->cost + 1;
+            fprintf(logg, "target %i %i\n", (*it).x,(*it).y);
+            fprintf(logg, "found %i %i\n", (*it).G, currentTile->G);
+            if((*it).G > currentTile->G + 1){
+              fprintf(logg, "shorterPath\n");
+              (*it).G = currentTile->G + 1;
+              // Setting the parent
+              currentTile->parent = &(*it); 
             }
           }
         }
