@@ -7,11 +7,10 @@
 FILE* log;
 int main(){
   // Declarations
-  int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map);
+  int gameStep(WINDOW* mainWindow, Map map);
   Map map;
   WINDOW *mainWindow;
   int retval;
-  std::list<Creature*> creatureList;
 
   retval = map.initMap();
   if(retval != 0){
@@ -20,17 +19,11 @@ int main(){
   map.addCreature(2, 2, 'r');
   log = fopen("log.txt", "w");
   mainWindow = initscr();
-  creatureList.push_front(&rat);
 
   fprintf(log, "DEBUG\n");// DEBUG
   
-  // Init section
-  rat.move(10,5, &map);
-  // End init section
-  
-
   for(;;){
-    gameStep(mainWindow, creatureList, map);
+    gameStep(mainWindow, map);
   }
  
   endwin();
@@ -39,21 +32,15 @@ int main(){
 }
 
 // Takes a single step of the game
-int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map){
+int gameStep(WINDOW* mainWindow, Map map){
   std::list<Creature*>::iterator i;
   int retVal;
   char c;
 
-  // Move the creatures
-  for(i = creatureList.begin(); i != creatureList.end(); ++i){
-    retVal = (*i)->step();
-    fprintf(log, "moving creature %i\n", retVal);// DEBUG
-  }
-  
   // Draw everything
   map.drawMap(mainWindow);
   // Draw all the creatures
-  map.drawCreatures(mainWindow);
+  map.drawMoveCreatures(mainWindow);
   refresh();
   // Waiting for input
   do {

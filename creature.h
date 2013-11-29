@@ -16,7 +16,7 @@ class Creature{
     // Draws the creature on the screen at its current position
     int drawCreature(WINDOW* window);
     // Takes one step 
-    int step();
+    int step(Map* map);
     int move(int x, int y, Map* map);
     void returnPath(struct Tile* currentTile);
     

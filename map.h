@@ -19,6 +19,7 @@ class Map{
       int drawMap(WINDOW* window);
       char map [height][width]; 
       int addCreature(int x, int y, char type);
+      int drawMoveCreatures(WINDOW* window);
 };
 
 #endif

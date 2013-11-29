@@ -37,12 +37,13 @@ Creature::Creature(int inX, int inY, char inBlit){
   blit = inBlit;
 }
 
-int Creature::step(){
+int Creature::step(Map* map){
   int ret = 0;
 
   // Return if the stack is empty
   if(path.empty()){
-    return(-1);
+    this->move(10, 5, map);
+    return(0);
   }
 
   // Getting (x,y) from the stack
