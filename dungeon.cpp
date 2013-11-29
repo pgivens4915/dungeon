@@ -10,7 +10,6 @@ int main(){
   int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map);
   Map map;
   WINDOW *mainWindow;
-  Creature rat(2,2,'r');
   int retval;
   std::list<Creature*> creatureList;
 
@@ -18,7 +17,7 @@ int main(){
   if(retval != 0){
     return(1);
   }
-
+  map.addCreature(2, 2, 'r');
   log = fopen("log.txt", "w");
   mainWindow = initscr();
   creatureList.push_front(&rat);
@@ -54,10 +53,7 @@ int gameStep(WINDOW* mainWindow, std::list<Creature*> creatureList, Map map){
   // Draw everything
   map.drawMap(mainWindow);
   // Draw all the creatures
-  for(i = creatureList.begin(); i != creatureList.end(); ++i){
-    retVal = (*i)->drawCreature(mainWindow);
-    fprintf(log, "drawing creature %i\n", retVal);// DEBUG
-  }
+  map.drawCreatures(mainWindow);
   refresh();
   // Waiting for input
   do {

@@ -6,6 +6,8 @@
 #include "map.h"
 #define MAX_PATH 5000
 
+class Map;
+
 class Creature{
   public:
     // The constructor that takes (x,y) as well as a char representation

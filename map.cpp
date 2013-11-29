@@ -36,6 +36,22 @@ int Map::initMap(){
   return(0);
 }
 
+int Map::addCreature(int x, int y, char type){
+  creatureList[y][x].push_front(Creature(x, y, 'r'));
+}
+
+int Map::drawCreatures(WINDOW* window){
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < width; j++){
+      std::list<int>::iterator it;
+      std::list<Creature>* list = creatureList[i][j]
+      for(it = list->begin(); it != list->end(); ++it){
+        (*it).drawCreature(window);
+      }
+    }
+  }
+}
+
 // Prints out the entire map
 int Map::drawMap(WINDOW* window){
   // Declarations
