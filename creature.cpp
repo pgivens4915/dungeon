@@ -40,6 +40,11 @@ Creature::Creature(int inX, int inY, char inBlit){
 int Creature::step(Map* map){
   int ret = 0;
 
+  //Checking map
+  if (map == NULL){
+    return(0);
+  }
+
   // Return if the stack is empty
   if(path.empty()){
     this->move(10, 5, map);

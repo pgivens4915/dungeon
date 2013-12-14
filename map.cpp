@@ -48,7 +48,7 @@ int Map::drawMoveCreatures(WINDOW* window){
       std::list<Creature>* list = &creatureList[i][j];
       for(it = list->begin(); it != list->end(); ++it){
         (*it).drawCreature(window);
-        (*it).step(this);
+        //(*it).step(this);
       }
     }
   }
