@@ -80,7 +80,7 @@ int Creature::move(int targetX, int targetY, Map* map){
   openList.push_front(*currentTile);
 
   // While we are not there or we have no options left
-  while(!(currentTile->x == targetX && currentTile->y == targetY) || openList.empty()){
+  while(!(currentTile->x == targetX && currentTile->y == targetY) &&  !openList.empty()){
     // Get the position that we want to delete, it is the lowest cost
     // square
     iterator = lowestCost(&openList);
