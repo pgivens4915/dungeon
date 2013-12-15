@@ -19,12 +19,10 @@ class Creature{
     int step(Map* map);
     int move(int x, int y, Map* map);
     void returnPath(struct Tile* currentTile);
-    
-
-  private:
     std::stack<int> path;
     int x;
     int y;
+  private:
     char blit;
 };
 

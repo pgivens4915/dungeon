@@ -47,9 +47,13 @@ int Creature::step(Map* map){
 
   // Return if the stack is empty
   if(path.empty()){
+    mvprintw(10,0, "path is empty");
+    refresh();
     this->move(10, 5, map);
     return(0);
   }
+  mvprintw(11,0, "path is full");
+  refresh();
 
   // Getting (x,y) from the stack
   ret = path.top();
@@ -80,7 +84,8 @@ int Creature::move(int targetX, int targetY, Map* map){
   openList.push_front(*currentTile);
 
   // While we are not there or we have no options left
-  while(!(currentTile->x == targetX && currentTile->y == targetY) &&  !openList.empty()){
+  while(!(currentTile->x == targetX && currentTile->y == targetY) &&  
+        !openList.empty()){
     // Get the position that we want to delete, it is the lowest cost
     // square
     iterator = lowestCost(&openList);
@@ -98,17 +103,19 @@ int Creature::move(int targetX, int targetY, Map* map){
 // Returns the path constructed from A*
 void Creature::returnPath(struct Tile* currentTile){
   // Declarations
+  int DEBUG = 0;
   int stepX;
   int stepY;
   int combo;
   while(currentTile->parent != NULL){
+    mvprintw(12 + DEBUG ,0, "in while");
+    DEBUG++;
     stepX = currentTile->x;
     stepY = currentTile->y;
     // The path data structure consists of a int split so xxxyyy
     combo = (stepX * 1000) + stepY;
     path.push(combo);
     currentTile = currentTile->parent;
-
   }
 }
 
