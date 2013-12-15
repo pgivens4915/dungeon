@@ -39,8 +39,8 @@ int Map::initMap(){
 
 int Map::addCreature(int x, int y, char type){
   // TODO: have a creature free command
-  Creature* creaturePoint = (Creature*) malloc(sizeof(Creature));
-  *creaturePoint = Creature(x, y, 'r');
+  Creature* creaturePoint;
+  creaturePoint = new Creature(x, y, 'r');
   creatureList[y][x].push_front(creaturePoint);
 }
 

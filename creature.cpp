@@ -50,6 +50,8 @@ int Creature::step(Map* map){
     mvprintw(10,0, "path is empty");
     refresh();
     this->move(10, 5, map);
+    mvprintw(10,15, "%i %i %i", this->x, this->y, this->path.top());
+    refresh();
     return(0);
   }
   mvprintw(11,0, "path is full");
@@ -97,7 +99,11 @@ int Creature::move(int targetX, int targetY, Map* map){
     addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
 
   }
+  mvprintw(11, 0, "backtrace %i", currentTile->parent);
+  refresh();
   returnPath(currentTile);
+  mvprintw(12, 0, "backtrace");
+  refresh();
 }
 
 // Returns the path constructed from A*
@@ -108,14 +114,17 @@ void Creature::returnPath(struct Tile* currentTile){
   int stepY;
   int combo;
   while(currentTile->parent != NULL){
-    mvprintw(12 + DEBUG ,0, "in while");
-    DEBUG++;
+    mvprintw(12 + DEBUG ,0, "in while %i", currentTile->parent);
+    refresh();
     stepX = currentTile->x;
     stepY = currentTile->y;
     // The path data structure consists of a int split so xxxyyy
     combo = (stepX * 1000) + stepY;
+    mvprintw(12 + DEBUG, 20, "HERE %i %i", &path, &(this->path));
+    refresh();
     path.push(combo);
     currentTile = currentTile->parent;
+    DEBUG++;
   }
 }
 
