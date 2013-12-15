@@ -49,12 +49,13 @@ int Creature::step(Map* map){
   if(path.empty()){
     mvprintw(10,0, "path is empty");
     refresh();
-    this->move(10, 5, map);
+    this->move(5, 4, map);
     mvprintw(10,15, "%i %i %i", this->x, this->y, this->path.top());
     refresh();
     return(0);
   }
   mvprintw(11,0, "path is full");
+  mvprintw(11, 20, "%i %i", this->x, this->y);
   refresh();
 
   // Getting (x,y) from the stack
@@ -82,6 +83,12 @@ int Creature::move(int targetX, int targetY, Map* map){
   currentTile->G = 0;
   currentTile->F = currentTile->H + currentTile->G;
   currentTile->parent = NULL;
+
+  // If we are already there
+  mvprintw(0,0, "%i %i %i %i", currentTile->x, currentTile->y, targetX, targetY);
+  if(currentTile->x == targetX && currentTile->y == targetY){
+    return(0);
+  }
 
   openList.push_front(*currentTile);
 
