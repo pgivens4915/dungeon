@@ -47,14 +47,9 @@ int Creature::step(Map* map){
 
   // Return if the stack is empty
   if(path.empty()){
-    mvprintw(10,0, "path is empty");
-    refresh();
-    this->move(4, 4, map);
+    this->move(3, 3, map);
     return(0);
   }
-  mvprintw(11,0, "path is full");
-  mvprintw(11, 20, "%i %i", this->x, this->y);
-  refresh();
 
   // Getting (x,y) from the stack
   ret = path.top();
@@ -64,6 +59,19 @@ int Creature::step(Map* map){
   x = ret / 1000;
   y = ret % 1000;
   return(0);
+}
+
+void printLists(FILE* logg, std::list<struct Tile>* openList,
+                std::list<struct Tile>* closedList){
+  std::list<struct Tile>::iterator it;
+  fprintf(logg, "OPEN LIST\n");
+  for(it = openList->begin(); it != openList->end(); it++){
+    fprintf(logg, "%i,%i\n", it->x, it->y);
+  }
+  fprintf(logg, "CLOSED LIST\n");
+  for(it = closedList->begin(); it != closedList->end(); it++){
+    fprintf(logg, "%i,%i\n", it->x, it->y);
+  }
 }
 
 int Creature::move(int targetX, int targetY, Map* map){
@@ -83,17 +91,17 @@ int Creature::move(int targetX, int targetY, Map* map){
   currentTile->parent = NULL;
 
   // If we are already there
-  mvprintw(0,0, "%i %i %i %i", currentTile->x, currentTile->y, targetX, targetY);
-  refresh();
   if(currentTile->x == targetX && currentTile->y == targetY){
     return(0);
   }
 
   openList.push_front(*currentTile);
 
+  int DEBUG = 0;
   // While we are not there or we have no options left
   while(!(currentTile->x == targetX && currentTile->y == targetY) &&  
         !openList.empty()){
+    fprintf(logg, "Step %i\n", DEBUG);
     // Get the position that we want to delete, it is the lowest cost
     // square
     iterator = lowestCost(&openList);
@@ -103,13 +111,12 @@ int Creature::move(int targetX, int targetY, Map* map){
     currentTile = &(*iterator);
     // Adds the neighbors of the tile to the open list
     addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
+    printLists(logg, &openList, &closedList);
+    fprintf(logg, "END Step %i\n", DEBUG);
+    DEBUG++;
 
   }
-  mvprintw(11, 0, "backtrace %i", currentTile->parent);
-  refresh();
   returnPath(currentTile);
-  mvprintw(12, 0, "backtrace");
-  refresh();
 }
 
 // Returns the path constructed from A*
@@ -120,14 +127,10 @@ void Creature::returnPath(struct Tile* currentTile){
   int stepY;
   int combo;
   while(currentTile->parent != NULL){
-    mvprintw(12 + DEBUG ,0, "in while %i", currentTile->parent);
-    refresh();
     stepX = currentTile->x;
     stepY = currentTile->y;
     // The path data structure consists of a int split so xxxyyy
     combo = (stepX * 1000) + stepY;
-    mvprintw(12 + DEBUG, 20, "HERE %i %i", &path, &(this->path));
-    refresh();
     path.push(combo);
     currentTile = currentTile->parent;
     DEBUG++;
@@ -182,16 +185,12 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
           map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
           !onClosedList){
 
-        fprintf(logg, "On open list\n");
         // Find the right item
         for(it = openList->begin(); it != openList->end(); it++){
           // If it matches the x y coord
           if((*it).x == currentTile->x + j && (*it).y == currentTile->y + i){
             // If we have found a shorter path
-            fprintf(logg, "target %i %i\n", (*it).x,(*it).y);
-            fprintf(logg, "found %i %i\n", (*it).G, currentTile->G);
             if((*it).G > currentTile->G + 1){
-              fprintf(logg, "shorterPath\n");
               (*it).G = currentTile->G + 1;
               // Setting the parent
               currentTile->parent = &(*it); 

@@ -16,7 +16,7 @@ int main(){
   if(retval != 0){
     return(1);
   }
-  map.addCreature(3, 3, 'r');
+  map.addCreature(1, 1, 'r');
   log = fopen("log.txt", "w");
   mainWindow = initscr();
 
