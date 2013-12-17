@@ -99,8 +99,7 @@ int Creature::move(int targetX, int targetY, Map* map){
 
   int DEBUG = 0;
   // While we are not there or we have no options left
-  while(!(currentTile->x == targetX && currentTile->y == targetY) &&  
-        !openList.empty()){
+  while(!openList.empty()){
     fprintf(logg, "Step %i\n", DEBUG);
     // Get the position that we want to delete, it is the lowest cost
     // square
@@ -109,6 +108,8 @@ int Creature::move(int targetX, int targetY, Map* map){
     openList.erase(iterator);
     closedList.push_front(*iterator);
     currentTile = &(*iterator);
+    // If we have reached are target
+    if(currentTile->x == targetX && currentTile->y == targetY) break;
     // Adds the neighbors of the tile to the open list
     addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
     printLists(logg, &openList, &closedList);
