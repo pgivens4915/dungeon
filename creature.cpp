@@ -49,9 +49,7 @@ int Creature::step(Map* map){
   if(path.empty()){
     mvprintw(10,0, "path is empty");
     refresh();
-    this->move(5, 4, map);
-    mvprintw(10,15, "%i %i %i", this->x, this->y, this->path.top());
-    refresh();
+    this->move(3, 3, map);
     return(0);
   }
   mvprintw(11,0, "path is full");
@@ -86,6 +84,7 @@ int Creature::move(int targetX, int targetY, Map* map){
 
   // If we are already there
   mvprintw(0,0, "%i %i %i %i", currentTile->x, currentTile->y, targetX, targetY);
+  refresh();
   if(currentTile->x == targetX && currentTile->y == targetY){
     return(0);
   }

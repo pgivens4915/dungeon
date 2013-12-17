@@ -53,7 +53,6 @@ int Map::drawMoveCreatures(WINDOW* window){
       for(it = list->begin(); it != list->end(); ++it){
         (*it)->drawCreature(window);
         (*it)->step(this);
-        mvprintw(10, 15, "%i %i %i", (*it)->x, (*it)->y, (*it)->path.top());
       }
     }
   }
