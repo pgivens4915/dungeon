@@ -49,7 +49,7 @@ int Creature::step(Map* map){
   if(path.empty()){
     mvprintw(10,0, "path is empty");
     refresh();
-    this->move(3, 3, map);
+    this->move(4, 4, map);
     return(0);
   }
   mvprintw(11,0, "path is full");
