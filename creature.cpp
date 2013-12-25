@@ -169,7 +169,8 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
       // If it is not the current tile, passalbe, and not on the list
       // That means the node is new
       // We add it to the open list if that was the case
-      if(i != j && map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
+      if(!(i == 0 && j == 0) && 
+          map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
           !onClosedList && !onOpenList){
 
         newTile.x = currentTile->x + j;
@@ -182,7 +183,7 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         openList->push_front(newTile);
       }
       // Else if it is on the open list make sure we have the shortest cost 
-      else if(i != j, 
+      else if(!(i == 0 && j == 0) && 
           map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
           !onClosedList){
 
