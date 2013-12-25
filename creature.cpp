@@ -8,17 +8,17 @@ FILE* logg;
 struct Tile{
   int x;
   int y;
-  int cost;
+  double cost;
   struct Tile* parent;
   // F is G + H
-  int F;
+  double F;
   // G is the current path cost
-  int G;
+  double G;
   // H is the estimated cost to target
-  int H;
+  double H;
 };
 
-int estimate(int x, int y, int targetX, int targetY);
+double estimate(int x, int y, int targetX, int targetY);
 void returnPath(struct Tile* currentTile);
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
     std::list<struct Tile>* closedlist, Map* map, int targetX, 
@@ -47,7 +47,7 @@ int Creature::step(Map* map){
 
   // Return if the stack is empty
   if(path.empty()){
-    this->move(3, 3, map);
+    this->move(1, 10, map);
     return(0);
   }
 
@@ -66,11 +66,11 @@ void printLists(FILE* logg, std::list<struct Tile>* openList,
   std::list<struct Tile>::iterator it;
   fprintf(logg, "OPEN LIST\n");
   for(it = openList->begin(); it != openList->end(); it++){
-    fprintf(logg, "%i,%i\n", it->x, it->y);
+    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
   }
   fprintf(logg, "CLOSED LIST\n");
   for(it = closedList->begin(); it != closedList->end(); it++){
-    fprintf(logg, "%i,%i\n", it->x, it->y);
+    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
   }
 }
 
@@ -113,7 +113,7 @@ int Creature::move(int targetX, int targetY, Map* map){
     // Adds the neighbors of the tile to the open list
     addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
     printLists(logg, &openList, &closedList);
-    fprintf(logg, "END Step %i\n", DEBUG);
+    fprintf(logg, "END Step %i\n\n", DEBUG);
     DEBUG++;
 
   }
@@ -176,6 +176,8 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         newTile.x = currentTile->x + j;
         newTile.y = currentTile->y + i;
         newTile.cost = 1;
+        // The diagonal case
+        if(i != 0 && j != 0) newTile.cost = 1.4;
         newTile.G = newTile.cost + currentTile->G;
         newTile.H = estimate(newTile.x, newTile.y, targetX, targetY);
         newTile.F = newTile.G + newTile.H;
@@ -207,11 +209,11 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
 }
 
 // Calcuating the estimate for a*
-int estimate(int x, int y, int targetX, int targetY){
+double estimate(int x, int y, int targetX, int targetY){
   // Int floor pythagareon theorum
   int deltaX = std::abs(x - targetX);
   int deltaY = std::abs(y - targetY);
-  return ( (int)floor(sqrt( pow(deltaX, 2) + pow(deltaY, 2) )) );
+  return ( (sqrt( pow(deltaX, 2) + pow(deltaY, 2) )) );
 }
 
 // Returns the lowest cost tile in the open list
