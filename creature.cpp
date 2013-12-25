@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <float.h>
 #include <cmath>
 #include <climits>
 #include "creature.h"
@@ -134,6 +135,7 @@ void Creature::returnPath(struct Tile* currentTile){
     combo = (stepX * 1000) + stepY;
     path.push(combo);
     currentTile = currentTile->parent;
+    fprintf(logg, "Here %i %i\n", currentTile->x, currentTile->y );
     DEBUG++;
   }
 }
@@ -224,7 +226,7 @@ std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
   // Initiate the largest tile, in this case zero
   struct Tile smallestMalloc;
   struct Tile* smallest = &smallestMalloc;
-  smallest->F = INT_MAX;
+  smallest->F = DBL_MAX;
 
   // For every item on the list
   for(it = openList->begin(); it != openList->end(); it++){
