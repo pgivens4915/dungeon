@@ -10,8 +10,8 @@ class Map{
       // The height and width of the map
       const static char width = 100;
       const static char height = 100;
-      // Creatures are kept on a list depending on there square
-      std::list<Creature*> creatureList[height][width];
+      // Creatures are kept on a list depending on their square
+      std::list<Creature*> creatureList;
     public:
       // Intilizes the map object from a file
       int initMap();

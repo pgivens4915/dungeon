@@ -22,6 +22,8 @@ class Creature{
     std::stack<int> path;
     int x;
     int y;
+    // Hunger should be a value from 0 to 100
+    int hunger;
   private:
     char blit;
 };

@@ -41,20 +41,18 @@ int Map::addCreature(int x, int y, char type){
   // TODO: have a creature free command
   Creature* creaturePoint;
   creaturePoint = new Creature(x, y, 'r');
-  creatureList[y][x].push_front(creaturePoint);
+  creatureList.push_front(creaturePoint);
 }
 
 // Draws the creature and steps it
 int Map::drawMoveCreatures(WINDOW* window){
-  for(int i = 0; i < height; i++){
-    for(int j = 0; j < width; j++){
-      std::list<Creature*>::iterator it;
-      std::list<Creature*>* list = &creatureList[i][j];
-      for(it = list->begin(); it != list->end(); ++it){
-        (*it)->drawCreature(window);
-        (*it)->step(this);
-      }
-    }
+  std::list<Creature*>::iterator it;
+  std::list<Creature*>* list = &creatureList;
+  for(it = list->begin(); it != list->end(); ++it){
+    (*it)->drawCreature(window);
+    (*it)->step(this);
+    mvprintw(20,0, "HERE");
+    refresh();
   }
 }
 
