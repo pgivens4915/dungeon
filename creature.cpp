@@ -6,6 +6,7 @@
 
 FILE* logg;
 
+// A structure to hold the tile information for the A* Alg
 struct Tile{
   int x;
   int y;
@@ -19,25 +20,29 @@ struct Tile{
   double H;
 };
 
+// Function Declarations //////////////////////////////////////////////////////
 double estimate(int x, int y, int targetX, int targetY);
 void returnPath(struct Tile* currentTile);
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
     std::list<struct Tile>* closedlist, Map* map, int targetX, 
     int targetY);
-
 std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
+///////////////////////////////////////////////////////////////////////////////
 
 int Creature::drawCreature(WINDOW* window){
   mvaddch(y, x, blit);
   return(0);
 }
 
+// The constructor, more to come here
 Creature::Creature(int inX, int inY, char inBlit){
   x = inX;
   y = inY;
   blit = inBlit;
 }
 
+// Everything that is needed to move a creature one step 
+// Patfinding happens here if it is needed
 int Creature::step(Map* map){
   int ret = 0;
 
@@ -46,12 +51,15 @@ int Creature::step(Map* map){
     return(0);
   }
 
-  // Return if the stack is empty
+  // If we are not moving what should we do? //////////////////////////////////
+  // TODO
   if(path.empty()){
-    this->move(1, 10, map);
+    this->move(1, 13, map);
     return(0);
   }
+  /////////////////////////////////////////////////////////////////////////////
 
+  // Right now the only thing we really do is move
   // Getting (x,y) from the stack
   ret = path.top();
   path.pop();
@@ -62,27 +70,30 @@ int Creature::step(Map* map){
   return(0);
 }
 
-void printLists(FILE* logg, std::list<struct Tile>* openList,
-                std::list<struct Tile>* closedList){
-  std::list<struct Tile>::iterator it;
-  fprintf(logg, "OPEN LIST\n");
-  for(it = openList->begin(); it != openList->end(); it++){
-    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
-  }
-  fprintf(logg, "CLOSED LIST\n");
-  for(it = closedList->begin(); it != closedList->end(); it++){
-    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
-  }
-}
+// Prints some lists for debuging reasons
+//void printLists(FILE* logg, std::list<struct Tile>* openList,
+//                std::list<struct Tile>* closedList){
+//  std::list<struct Tile>::iterator it;
+//  fprintf(logg, "OPEN LIST\n");
+//  for(it = openList->begin(); it != openList->end(); it++){
+//    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
+//  }
+//  fprintf(logg, "CLOSED LIST\n");
+//  for(it = closedList->begin(); it != closedList->end(); it++){
+//    fprintf(logg, "%i,%i : %f %f %f\n", it->x, it->y, it->F, it->G, it->H);
+//  }
+//}
 
+// This function is our A* algorithm
 int Creature::move(int targetX, int targetY, Map* map){
-  logg = fopen("astar.log", "w");
   std::list<struct Tile> openList;
   std::list<struct Tile> closedList;
   std::list<struct Tile>::iterator iterator; 
   // Becuase I dont want to malloc =)
   struct Tile aTile;
   struct Tile* currentTile = &aTile;
+
+  // Initilize the starting tile
   currentTile->x = x;
   currentTile->y = y;
   currentTile->cost = 0;
@@ -91,50 +102,53 @@ int Creature::move(int targetX, int targetY, Map* map){
   currentTile->F = currentTile->H + currentTile->G;
   currentTile->parent = NULL;
 
-  // If we are already there
+  // If we are already there return
   if(currentTile->x == targetX && currentTile->y == targetY){
     return(0);
   }
 
+  // Add the starting tile to the open list
   openList.push_front(*currentTile);
 
-  int DEBUG = 0;
-  // While we are not there or we have no options left
+  // While we have no options left
   while(!openList.empty()){
-    fprintf(logg, "Step %i\n", DEBUG);
     // Get the position that we want to delete, it is the lowest cost
     // square
     iterator = lowestCost(&openList);
-    // Delete that node
+    // Delete that node from the open list
     openList.erase(iterator);
+    // Put it on the closed list
     closedList.push_front(*iterator);
+    // It is your new current tile
     currentTile = &(*iterator);
-    // If we have reached are target
+    // If we have reached are target exit
     if(currentTile->x == targetX && currentTile->y == targetY) break;
     // Adds the neighbors of the tile to the open list
+    // or adjusts their parents
     addNeighbors(currentTile, &openList, &closedList, map, targetX, targetY);
-    printLists(logg, &openList, &closedList);
-    fprintf(logg, "END Step %i\n\n", DEBUG);
-    DEBUG++;
 
   }
+  // Returns the path to the movement stack
   returnPath(currentTile);
 }
 
-// Returns the path constructed from A*
+// Returns the path constructed from A* and adds it to the creatures movement
+// stack
 void Creature::returnPath(struct Tile* currentTile){
   // Declarations
   int stepX;
   int stepY;
   int combo;
+
+  // While we have not found the end
   while(currentTile->parent != NULL){
     stepX = currentTile->x;
     stepY = currentTile->y;
     // The path data structure consists of a int split so xxxyyy
     combo = (stepX * 1000) + stepY;
     path.push(combo);
+    // Move to the next tile
     currentTile = currentTile->parent;
-    fprintf(logg, "Here %i %i\n", currentTile->x, currentTile->y );
   }
 }
 
@@ -149,19 +163,25 @@ bool contains(std::list<struct Tile>* list, int x, int y){
   return false;
 }
 
-// Add all proximal neighbors to a list
+// Checks all adjacent neighbors,  if a move is valid and they are not on the 
+// open list it moves them onto the open list.  Else if it is valid and not on
+// the closed list, adjust the parent if the path is shorter
 void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
     std::list<struct Tile>* closedList, Map* map, int targetX, 
     int targetY){
 
+  // Declarations
   struct Tile newTile;
   bool onOpenList;
   bool onClosedList;
   std::list<struct Tile>::iterator it;
+
+  // For all adjacent tiles
   for(int i = -1; i < 2; i++){
     for(int j = -1; j < 2; j++){
-      // Checking to see if on lists
-      onOpenList   = contains(openList, currentTile->x + j, 
+      // Checking to see if they are on the lists
+      // Set flags appropriatly
+      onOpenList = contains(openList, currentTile->x + j, 
           currentTile->y + i);
       onClosedList = contains(closedList, currentTile->x + j, 
           currentTile->y + i);
@@ -173,6 +193,7 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
           map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
           !onClosedList && !onOpenList){
 
+        // Create a new tile that represents the adjacent tile
         newTile.x = currentTile->x + j;
         newTile.y = currentTile->y + i;
         newTile.cost = 1;
@@ -182,13 +203,11 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         newTile.H = estimate(newTile.x, newTile.y, targetX, targetY);
         newTile.F = newTile.G + newTile.H;
         newTile.parent = currentTile;
+
+        // Add that new tile to the open list
         openList->push_front(newTile);
-        // DEBUGING BLOCK
-        if(newTile.x == 7 && newTile.y == 6){
-          fprintf(logg, "FOUND IT\n %i %i\n", newTile.parent->x, newTile.parent->y);
-        }
-        // END DEBUGGING BLOCK
       }
+
       // Else if it is on the open list make sure we have the shortest cost 
       else if(!(i == 0 && j == 0) && 
           map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
@@ -203,16 +222,13 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
             if(it->G > currentTile->G + 1){
               it->G = currentTile->G + 1;
               // Setting the parent
-              fprintf(logg, "Points to %i,%i\n", currentTile->x, currentTile->y);
               it->parent = currentTile; 
             }
           }
         }
       }
     }
-
   }
-
 }
 
 // Calcuating the estimate for a*
@@ -231,10 +247,12 @@ std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
   // Initiate the largest tile, in this case zero
   struct Tile smallestMalloc;
   struct Tile* smallest = &smallestMalloc;
+  // Make its value the max so everything will be smaller
   smallest->F = DBL_MAX;
 
   // For every item on the list
   for(it = openList->begin(); it != openList->end(); it++){
+    // If it is smaller
     if (it->F < smallest->F){
       // Pointer assignment, smallest should point to a member of the 
       // list that was passed in
