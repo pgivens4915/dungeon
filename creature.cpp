@@ -124,7 +124,6 @@ int Creature::move(int targetX, int targetY, Map* map){
 // Returns the path constructed from A*
 void Creature::returnPath(struct Tile* currentTile){
   // Declarations
-  int DEBUG = 0;
   int stepX;
   int stepY;
   int combo;
@@ -136,7 +135,6 @@ void Creature::returnPath(struct Tile* currentTile){
     path.push(combo);
     currentTile = currentTile->parent;
     fprintf(logg, "Here %i %i\n", currentTile->x, currentTile->y );
-    DEBUG++;
   }
 }
 
@@ -185,6 +183,11 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         newTile.F = newTile.G + newTile.H;
         newTile.parent = currentTile;
         openList->push_front(newTile);
+        // DEBUGING BLOCK
+        if(newTile.x == 7 && newTile.y == 6){
+          fprintf(logg, "FOUND IT\n %i %i\n", newTile.parent->x, newTile.parent->y);
+        }
+        // END DEBUGGING BLOCK
       }
       // Else if it is on the open list make sure we have the shortest cost 
       else if(!(i == 0 && j == 0) && 
@@ -194,12 +197,14 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         // Find the right item
         for(it = openList->begin(); it != openList->end(); it++){
           // If it matches the x y coord
-          if((*it).x == currentTile->x + j && (*it).y == currentTile->y + i){
+          if(it->x == currentTile->x + j && it->y == currentTile->y + i){
             // If we have found a shorter path
-            if((*it).G > currentTile->G + 1){
-              (*it).G = currentTile->G + 1;
+            // TODO: Better metrics here
+            if(it->G > currentTile->G + 1){
+              it->G = currentTile->G + 1;
               // Setting the parent
-              currentTile->parent = &(*it); 
+              fprintf(logg, "Points to %i,%i\n", currentTile->x, currentTile->y);
+              it->parent = currentTile; 
             }
           }
         }
