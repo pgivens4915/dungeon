@@ -1,6 +1,9 @@
 Monster system
   Hunger
+    From 1 - 100
+    Replenised by eating
   Random wandering
 
 Dungeon system
   Food
+    Destroyed by eating
