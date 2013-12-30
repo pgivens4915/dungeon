@@ -1,4 +1,8 @@
 #include <ncurses.h>
+#include <limits.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
 #include "map.h"
 #include "creature.h"
 #include <list>
@@ -36,6 +40,13 @@ int gameStep(WINDOW* mainWindow, Map map){
   std::list<Creature*>::iterator i;
   int retVal;
   char c;
+  clock_t startTime;
+  clock_t endTime;
+  int diffTime;
+  float microSeconds;
+
+  // Start a timer
+  startTime = clock();
 
   // Draw everything
   map.drawMap(mainWindow);
@@ -47,4 +58,11 @@ int gameStep(WINDOW* mainWindow, Map map){
       c = getch();
   } while (c != '.');
 
+  // Waiting for the correct amount of time
+  endTime = clock();
+
+  diffTime = endTime - startTime;
+  // Calculating the time in microseconds
+  microSeconds = (float)diffTime / (CLOCKS_PER_SEC);
+  microSeconds = microSeconds * 1000000;
 }

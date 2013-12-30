@@ -51,8 +51,6 @@ int Map::drawMoveCreatures(WINDOW* window){
   for(it = list->begin(); it != list->end(); ++it){
     (*it)->drawCreature(window);
     (*it)->step(this);
-    mvprintw(20,0, "HERE");
-    refresh();
   }
 }
 
@@ -71,5 +69,4 @@ int Map::drawMap(WINDOW* window){
       mvaddch(i,j, map[i][j]);
     }    
   }
-  // mvprintw(2,0,"DEBUG %i %i", maxX, maxY);
 }
