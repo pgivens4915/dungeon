@@ -8,6 +8,8 @@
 #include "creature.h"
 #include <list>
 
+#define MAX_FPS 3
+
 
 FILE* log;
 int main(){
@@ -38,6 +40,7 @@ int main(){
 
 // Takes a single step of the game
 int gameStep(WINDOW* mainWindow, Map map){
+  const double second = 1000000;
   std::list<Creature*>::iterator i;
   int retVal;
   int microSeconds;
@@ -55,6 +58,7 @@ int gameStep(WINDOW* mainWindow, Map map){
   // Draw all the creatures
   map.drawMoveCreatures(mainWindow);
   refresh();
+
   // Waiting for input
   //do {
   //    c = getch();
@@ -65,10 +69,10 @@ int gameStep(WINDOW* mainWindow, Map map){
   endTime = timeQuery.ru_stime;
 
   // Calculating the time in microseconds
-  microSeconds = (startTime.tv_sec - endTime.tv_sec) * 1000000 +
+  microSeconds = (startTime.tv_sec - endTime.tv_sec) * second +
                   (startTime.tv_usec - endTime.tv_usec);
-  // Sleep for the rest of a second
-  if (microSeconds < 1000000){
-    usleep(1000000 - microSeconds);
+  // Sleep for the correct time 
+  if (microSeconds < (second / MAX_FPS)){
+    usleep((second / MAX_FPS) - microSeconds);
   }
 }
