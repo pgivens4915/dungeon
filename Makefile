@@ -1,11 +1,13 @@
-all: dungeon
+all: Dungeon
 
-dungeon: dungeon.o map.o creature.o
-	g++ -g dungeon.cpp map.o creature.o -lncurses -o dungeon
-	rm *.o
+Dungeon: dungeon.cpp Map.o Creature.o
+	g++ -g dungeon.cpp Map.o Creature.o -lncurses -o Dungeon
 
-map.o : map.cpp map.h
-	g++ -c -g map.cpp  
+Map.o : map.cpp map.h
+	g++ -c -g map.cpp -o Map.o
 
-creature.o : creature.cpp creature.h
-	g++ -c -g creature.cpp
+Creature.o : creature.cpp creature.h
+	g++ -c -g creature.cpp -o Creature.o
+
+clean :
+	rm *.o Dungeon

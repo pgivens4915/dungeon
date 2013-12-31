@@ -54,9 +54,9 @@ int gameStep(WINDOW* mainWindow, Map map){
   map.drawMoveCreatures(mainWindow);
   refresh();
   // Waiting for input
-  do {
-      c = getch();
-  } while (c != '.');
+  //do {
+  //    c = getch();
+  //} while (c != '.');
 
   // Waiting for the correct amount of time
   endTime = clock();
@@ -65,4 +65,8 @@ int gameStep(WINDOW* mainWindow, Map map){
   // Calculating the time in microseconds
   microSeconds = (float)diffTime / (CLOCKS_PER_SEC);
   microSeconds = microSeconds * 1000000;
+  // Sleep for the rest of a second
+  if (microSeconds < 1000000){
+    usleep(1000000 - microSeconds);
+  }
 }
