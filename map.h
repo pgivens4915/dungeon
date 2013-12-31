@@ -7,12 +7,12 @@ class Creature;
 
 class Map{
     private:
+      // Creatures are kept on a list 
+      std::list<Creature*> creatureList;
+    public:
       // The height and width of the map
       const static char width = 100;
       const static char height = 100;
-      // Creatures are kept on a list depending on their square
-      std::list<Creature*> creatureList;
-    public:
       // Intilizes the map object from a file
       int initMap();
       // Draws the visual content of the map  

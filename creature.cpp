@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <cstdlib>
 #include <float.h>
 #include <cmath>
 #include <climits>
@@ -45,6 +46,8 @@ Creature::Creature(int inX, int inY, char inBlit){
 // Patfinding happens here if it is needed
 int Creature::step(Map* map){
   int ret = 0;
+  int randX;
+  int randY;
 
   //Checking map
   if (map == NULL){
@@ -54,7 +57,11 @@ int Creature::step(Map* map){
   // If we are not moving what should we do? //////////////////////////////////
   // TODO
   if(path.empty()){
-    this->move(21, 13, map);
+    do{
+      randX = rand() % map->width;
+      randY = rand() % map->height;
+    }while(map->map[randY][randX] == 'X');
+    this->move(randX, randY, map);
     return(0);
   }
   /////////////////////////////////////////////////////////////////////////////
