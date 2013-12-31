@@ -5,5 +5,9 @@ Monster system
   Random wandering
 
 Dungeon system
-  Food
-    Destroyed by eating
+  Objects
+    Food
+      Destroyed by eating
+    Treasure
+      Randomly generated with inclination to be in certain areas
+

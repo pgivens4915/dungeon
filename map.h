@@ -11,8 +11,8 @@ class Map{
       std::list<Creature*> creatureList;
     public:
       // The height and width of the map
-      const static char width = 100;
-      const static char height = 100;
+      const static char width = 80;
+      const static char height = 40;
       // Intilizes the map object from a file
       int initMap();
       // Draws the visual content of the map  
