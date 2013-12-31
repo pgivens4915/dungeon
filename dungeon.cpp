@@ -14,10 +14,11 @@
 FILE* log;
 int main(){
   // Declarations
-  int gameStep(WINDOW* mainWindow, Map map);
+  int gameStep(WINDOW* mainWindow, Map map, bool paused);
   Map map;
   WINDOW *mainWindow;
   int retval;
+  bool paused = true;
 
   retval = map.initMap();
   if(retval != 0){
@@ -30,7 +31,7 @@ int main(){
   fprintf(log, "DEBUG\n");// DEBUG
   
   for(;;){
-    gameStep(mainWindow, map);
+    paused = gameStep(mainWindow, map, paused);
   }
  
   endwin();
@@ -38,8 +39,22 @@ int main(){
   return 0;
 }
 
+bool pausedLoop(){
+  char c; 
+  bool paused = true;
+  do {
+    c = getch();
+    switch(c){ 
+      case ' ' :
+      paused = false;
+      break;
+    }
+  } while (c != '.' && paused);
+  return(paused);
+}
+
 // Takes a single step of the game
-int gameStep(WINDOW* mainWindow, Map map){
+int gameStep(WINDOW* mainWindow, Map map, bool paused){
   const double second = 1000000;
   std::list<Creature*>::iterator i;
   int retVal;
@@ -59,20 +74,24 @@ int gameStep(WINDOW* mainWindow, Map map){
   map.drawMoveCreatures(mainWindow);
   refresh();
 
+  if (paused){
   // Waiting for input
-  //do {
-  //    c = getch();
-  //} while (c != '.');
-
-  // Waiting for the correct amount of time
-  getrusage(RUSAGE_SELF, &timeQuery);
-  endTime = timeQuery.ru_stime;
-
-  // Calculating the time in microseconds
-  microSeconds = (startTime.tv_sec - endTime.tv_sec) * second +
-                  (startTime.tv_usec - endTime.tv_usec);
-  // Sleep for the correct time 
-  if (microSeconds < (second / MAX_FPS)){
-    usleep((second / MAX_FPS) - microSeconds);
+    paused = pausedLoop();
   }
+
+  // else it is not paused
+  else{
+    // Waiting for the correct amount of time
+    getrusage(RUSAGE_SELF, &timeQuery);
+    endTime = timeQuery.ru_stime;
+
+    // Calculating the time in microseconds
+    microSeconds = (startTime.tv_sec - endTime.tv_sec) * second +
+      (startTime.tv_usec - endTime.tv_usec);
+    // Sleep for the correct time 
+    if (microSeconds < (second / MAX_FPS)){
+      usleep((second / MAX_FPS) - microSeconds);
+    }
+  }
+  return(paused);
 }
