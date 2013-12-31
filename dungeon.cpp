@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <sys/resource.h>
 #include <limits.h>
 #include <unistd.h>
 #include <time.h>
@@ -39,14 +40,15 @@ int main(){
 int gameStep(WINDOW* mainWindow, Map map){
   std::list<Creature*>::iterator i;
   int retVal;
+  int microSeconds;
   char c;
-  clock_t startTime;
-  clock_t endTime;
-  int diffTime;
-  float microSeconds;
+  struct rusage timeQuery;
+  struct timeval startTime;
+  struct timeval endTime;
 
   // Start a timer
-  startTime = clock();
+  getrusage(RUSAGE_SELF, &timeQuery);
+  startTime = timeQuery.ru_stime;
 
   // Draw everything
   map.drawMap(mainWindow);
@@ -59,12 +61,12 @@ int gameStep(WINDOW* mainWindow, Map map){
   //} while (c != '.');
 
   // Waiting for the correct amount of time
-  endTime = clock();
+  getrusage(RUSAGE_SELF, &timeQuery);
+  endTime = timeQuery.ru_stime;
 
-  diffTime = endTime - startTime;
   // Calculating the time in microseconds
-  microSeconds = (float)diffTime / (CLOCKS_PER_SEC);
-  microSeconds = microSeconds * 1000000;
+  microSeconds = (startTime.tv_sec - endTime.tv_sec) * 1000000 +
+                  (startTime.tv_usec - endTime.tv_usec);
   // Sleep for the rest of a second
   if (microSeconds < 1000000){
     usleep(1000000 - microSeconds);
