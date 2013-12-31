@@ -49,6 +49,10 @@ int Map::drawMoveCreatures(WINDOW* window){
   std::list<Creature*>::iterator it;
   std::list<Creature*>* list = &creatureList;
   for(it = list->begin(); it != list->end(); ++it){
+    if ((*it)->dead){
+      delete(&it);
+      list->erase(it);
+    }
     (*it)->drawCreature(window);
     (*it)->step(this);
   }

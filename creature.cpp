@@ -45,12 +45,14 @@ Creature::Creature(int inX, int inY, char inBlit){
   x = inX;
   y = inY;
   blit = inBlit;
+  dead = false;
+  hunger= 100;
 }
 
 void hungerTick(Creature* creature){
   creature->hunger--;
   if (creature->hunger < 0){
-    delete(creature);
+    creature->dead = true;
   }
 }
 
