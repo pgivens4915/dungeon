@@ -20,13 +20,18 @@ int main(){
   int retval;
   bool paused = true;
 
+  // Map initilization
   retval = map.initMap();
   if(retval != 0){
     return(1);
   }
+  
   map.addCreature(1, 1, 'r');
   log = fopen("log.txt", "w");
+
+  // ncurses intit
   mainWindow = initscr();
+  nodelay(mainWindow, TRUE);
 
   fprintf(log, "DEBUG\n");// DEBUG
   
@@ -93,5 +98,12 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
       usleep((second / MAX_FPS) - microSeconds);
     }
   }
+
+  // Getting unpaused input
+  c = getch();
+  if (c == ' '){
+    paused = true;
+  }
+
   return(paused);
 }
