@@ -62,7 +62,6 @@ int Creature::step(Map* map){
       randY = rand() % map->height;
     }while(map->map[randY][randX] == 'X');
     this->move(randX, randY, map);
-    return(0);
   }
   /////////////////////////////////////////////////////////////////////////////
 
@@ -74,6 +73,14 @@ int Creature::step(Map* map){
   // For example 120021 x = 120 y = 21
   x = ret / 1000;
   y = ret % 1000;
+
+  // Food tic
+  hunger--;
+
+  // DEBUG
+  mvprintw(40,0,"HERE %i", hunger);
+  refresh();
+  // End DEBUG
   return(0);
 }
 
