@@ -13,12 +13,15 @@ class Creature{
     // The constructor that takes (x,y) as well as a char representation
     // of the creature to be blitted
     Creature(int x, int y, char blit);
+    ~Creature();
+
     // Draws the creature on the screen at its current position
     int drawCreature(WINDOW* window);
     // Takes one step 
     int step(Map* map);
     int move(int x, int y, Map* map);
     void returnPath(struct Tile* currentTile);
+
     std::stack<int> path;
     int x;
     int y;

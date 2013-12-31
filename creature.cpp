@@ -30,6 +30,11 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
 std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
 ///////////////////////////////////////////////////////////////////////////////
 
+Creature::~Creature(){
+  // How you free a stack?
+  path = std::stack<int>();
+}
+
 int Creature::drawCreature(WINDOW* window){
   mvaddch(y, x, blit);
   return(0);
@@ -40,6 +45,13 @@ Creature::Creature(int inX, int inY, char inBlit){
   x = inX;
   y = inY;
   blit = inBlit;
+}
+
+void hungerTick(Creature* creature){
+  creature->hunger--;
+  if (creature->hunger < 0){
+    delete(creature);
+  }
 }
 
 // Everything that is needed to move a creature one step 
@@ -74,8 +86,8 @@ int Creature::step(Map* map){
   x = ret / 1000;
   y = ret % 1000;
 
-  // Food tic
-  hunger--;
+   
+  hungerTick(this);
 
   // DEBUG
   mvprintw(40,0,"HERE %i", hunger);
