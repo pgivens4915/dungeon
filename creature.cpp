@@ -54,7 +54,7 @@ int Creature::step(Map* map){
   // If we are not moving what should we do? //////////////////////////////////
   // TODO
   if(path.empty()){
-    this->move(1, 13, map);
+    this->move(21, 13, map);
     return(0);
   }
   /////////////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ int Creature::move(int targetX, int targetY, Map* map){
 
   }
   // Returns the path to the movement stack
-  returnPath(currentTile);
+  if(!openList.empty()) returnPath(currentTile);
 }
 
 // Returns the path constructed from A* and adds it to the creatures movement
