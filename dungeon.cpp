@@ -34,8 +34,6 @@ int main(){
   // ncurses intit
   mainWindow = initscr();
   nodelay(mainWindow, TRUE);
-  mvprintw(0,0,"DEBUG\n");
-  refresh();
   
   for(;;){
     paused = gameStep(mainWindow, map, paused);
@@ -80,7 +78,7 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
   map.drawMap(mainWindow);
   // Draw all the creatures
   map.drawMoveCreatures(mainWindow);
-  food.draw(mainWindow);
+  //food.draw(mainWindow);
   refresh();
 
   if (paused){
