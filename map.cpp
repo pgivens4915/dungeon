@@ -4,6 +4,9 @@
 #include "map.h"
 #define SPACE 32
 
+Map::Map(){
+}
+
 int Map::initMap(){
   // Declarations
   FILE* mapFile;

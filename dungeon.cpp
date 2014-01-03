@@ -26,6 +26,7 @@ int main(){
   if(retval != 0){
     return(1);
   }
+
   
   map.addCreature(1, 1, 'r');
   log = fopen("log.txt", "w");
@@ -33,8 +34,8 @@ int main(){
   // ncurses intit
   mainWindow = initscr();
   nodelay(mainWindow, TRUE);
-
-  fprintf(log, "DEBUG\n");// DEBUG
+  mvprintw(0,0,"DEBUG\n");
+  refresh();
   
   for(;;){
     paused = gameStep(mainWindow, map, paused);
