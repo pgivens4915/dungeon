@@ -48,9 +48,9 @@ int Map::addCreature(int x, int y, char type){
 }
 
 // Adding an item
-void Map::addItem(int x, int y, char type){
+void Map::addItem(int x, int y, char type, int amount){
   Item* itemPoint;
-  itemPoint = new Item(x, y, type);
+  itemPoint = new Item(x, y, type, amount);
   itemList.push_front(itemPoint);
 }
 
@@ -74,8 +74,8 @@ int Map::drawMoveCreatures(WINDOW* window){
       //delete(*it);
     }
     else{
-      (*it)->drawCreature(window);
       (*it)->step(this);
+      (*it)->drawCreature(window);
     }
   }
 }

@@ -46,7 +46,7 @@ Creature::Creature(int inX, int inY, char inBlit){
   y = inY;
   blit = inBlit;
   dead = false;
-  hunger= 100;
+  hunger = 500;
 }
 
 void hungerTick(Creature* creature){
@@ -66,6 +66,14 @@ int Creature::step(Map* map){
   //Checking map
   if (map == NULL){
     return(0);
+  }
+
+  // If we are hungry what do we do
+  if(hunger < 100){
+    //if (onFood()){
+    //  eatFood()
+    //}
+    //else findFood();
   }
 
   // If we are not moving what should we do? //////////////////////////////////
@@ -289,4 +297,9 @@ std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
     }
   }
   return(iteratorPosition);
+}
+
+// Reseting the path
+void Creature::emptyList(){
+  path = std::stack<int>();
 }

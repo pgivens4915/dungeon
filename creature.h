@@ -32,6 +32,9 @@ class Creature{
     bool dead;
   private:
     char blit;
+
+    // Private functions
+    void emptyList();
 };
 
 #endif

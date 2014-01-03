@@ -29,7 +29,7 @@ int main(){
 
   
   map.addCreature(1, 1, 'r');
-  map.addItem(2,2,'f');
+  map.addItem(2,2,'f', 10);
   log = fopen("log.txt", "w");
 
   // ncurses intit
@@ -62,7 +62,6 @@ bool pausedLoop(){
 // Takes a single step of the game
 int gameStep(WINDOW* mainWindow, Map map, bool paused){
   const double second = 1000000;
-  Item food = Item(2,2,'f');
   std::list<Creature*>::iterator i;
   int retVal;
   int microSeconds;
@@ -79,6 +78,7 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
   map.drawMap(mainWindow);
   // Draw all the creatures
   map.drawMoveCreatures(mainWindow);
+  // Draw the items
   map.drawItems(mainWindow);
   refresh();
 

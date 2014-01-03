@@ -5,7 +5,7 @@
 
 class Item{
   public:
-    Item(int x, int y, char blit);
+    Item(int x, int y, char blit, int amount);
 
     // Functions
     void draw(WINDOW* window);
@@ -14,6 +14,7 @@ class Item{
     int x;
     int y;
     char blit;
+    int amount;
 
   private:
 };
