@@ -29,6 +29,7 @@ int main(){
 
   
   map.addCreature(1, 1, 'r');
+  map.addItem(2,2,'f');
   log = fopen("log.txt", "w");
 
   // ncurses intit

@@ -40,11 +40,18 @@ int Map::initMap(){
   return(0);
 }
 
+// Adding a creature
 int Map::addCreature(int x, int y, char type){
-  // TODO: have a creature free command
   Creature* creaturePoint;
-  creaturePoint = new Creature(x, y, 'r');
+  creaturePoint = new Creature(x, y, type);
   creatureList.push_front(creaturePoint);
+}
+
+// Adding an item
+void Map::addItem(int x, int y, char type){
+  Item* itemPoint;
+  itemPoint = new Item(x, y, type);
+  itemList.push_front(itemPoint);
 }
 
 // Draws the creature and steps it
