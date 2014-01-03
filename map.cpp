@@ -54,6 +54,14 @@ void Map::addItem(int x, int y, char type){
   itemList.push_front(itemPoint);
 }
 
+// Draws an Item
+void Map::drawItems(WINDOW* window){
+  std::list<Item*>::iterator it;
+  for(it = itemList.begin(); it != itemList.end(); it++){
+    (*it)->draw(window);
+  }
+}
+
 // Draws the creature and steps it
 int Map::drawMoveCreatures(WINDOW* window){
   std::list<Creature*>::iterator it;

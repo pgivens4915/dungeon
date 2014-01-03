@@ -79,7 +79,7 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
   map.drawMap(mainWindow);
   // Draw all the creatures
   map.drawMoveCreatures(mainWindow);
-  //food.draw(mainWindow);
+  map.drawItems(mainWindow);
   refresh();
 
   if (paused){

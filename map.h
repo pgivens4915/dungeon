@@ -26,6 +26,7 @@ class Map{
       int addCreature(int x, int y, char type);
       int drawMoveCreatures(WINDOW* window);
       void addItem(int x, int y, char type);
+      void drawItems(WINDOW* window);
 };
 
 #endif
