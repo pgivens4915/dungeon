@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include "map.h"
 #include "creature.h"
+#include "item.h"
 #include <list>
 
 #define MAX_FPS 3
@@ -61,6 +62,7 @@ bool pausedLoop(){
 // Takes a single step of the game
 int gameStep(WINDOW* mainWindow, Map map, bool paused){
   const double second = 1000000;
+  Item food = Item(2,2,'f');
   std::list<Creature*>::iterator i;
   int retVal;
   int microSeconds;
@@ -77,6 +79,7 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
   map.drawMap(mainWindow);
   // Draw all the creatures
   map.drawMoveCreatures(mainWindow);
+  food.draw(mainWindow);
   refresh();
 
   if (paused){

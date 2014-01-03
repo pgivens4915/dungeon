@@ -1,7 +1,7 @@
 all: Dungeon
 
 Dungeon: dungeon.cpp Map.o Creature.o Item.o
-	g++ -g dungeon.cpp Map.o Creature.o -lncurses -o Dungeon
+	g++ -g dungeon.cpp Map.o Creature.o Item.o -lncurses -o Dungeon
 
 Map.o : map.cpp map.h
 	g++ -c -g map.cpp -o Map.o

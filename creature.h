@@ -15,6 +15,7 @@ class Creature{
     Creature(int x, int y, char blit);
     ~Creature();
 
+    // Functions
     // Draws the creature on the screen at its current position
     int drawCreature(WINDOW* window);
     // Takes one step 
@@ -22,6 +23,7 @@ class Creature{
     int move(int x, int y, Map* map);
     void returnPath(struct Tile* currentTile);
 
+    // Member variables
     std::stack<int> path;
     int x;
     int y;
