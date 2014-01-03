@@ -53,7 +53,7 @@ int Map::drawMoveCreatures(WINDOW* window){
       list->erase(it);
       it--;
       // TODO get this delete working right
-      delete(*it);
+      //delete(*it);
     }
     else{
       (*it)->drawCreature(window);
