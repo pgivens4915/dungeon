@@ -34,7 +34,11 @@ class Creature{
     char blit;
 
     // Private functions
+    // Empties the current path
     void emptyList();
+    // TODO : Maybe not euclidian
+    // Finds a path to the closest(Euclidian) food
+    void findFood(Map* map);
 };
 
 #endif

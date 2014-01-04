@@ -10,11 +10,11 @@ class Map{
     private:
       // Creatures are kept on a list 
       std::list<Creature*> creatureList;
-      std::list<Item*> itemList;
     public:
       // The height and width of the map
       const static char width = 80;
       const static char height = 40;
+      std::list<Item*> itemList;
 
       // Functions
       Map();

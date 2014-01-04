@@ -56,6 +56,36 @@ void hungerTick(Creature* creature){
   }
 }
 
+// Checks to see if we are on top of food, and if so, eat it
+bool onFood(Map* map){
+  return false;
+}
+
+// Sets a path to the closest (euclidian) food
+void Creature::findFood(Map* map){
+  // Declarations
+  std::list<Item*>::iterator it;
+  // The max possible distance, everything else is smaller
+  double smallest = sqrt(pow(map->height, 2) * pow(map->width, 2));
+  double dist;
+  int targetX = 0;
+  int targetY = 0;
+
+  // Empty the current list
+  this->emptyList();
+
+  // Find the closest square
+  for(it = map->itemList.begin(); it != map->itemList.end(); it++){
+    dist = estimate(x,y, (*it)->x, (*it)->y);
+    if (smallest > dist){
+      smallest = dist;
+      targetX = (*it)->x;
+      targetY = (*it)->y;
+    }
+  }
+  this->move(targetX, targetY, map);
+}
+
 // Everything that is needed to move a creature one step 
 // Patfinding happens here if it is needed
 int Creature::step(Map* map){
@@ -70,10 +100,9 @@ int Creature::step(Map* map){
 
   // If we are hungry what do we do
   if(hunger < 100){
-    //if (onFood()){
-    //  eatFood()
-    //}
-    //else findFood();
+    // Funny syntax, eat the food if we are on it else, walk to it
+    if (onFood(map));
+    else findFood(map);
   }
 
   // If we are not moving what should we do? //////////////////////////////////
