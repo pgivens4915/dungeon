@@ -46,7 +46,8 @@ Creature::Creature(int inX, int inY, char inBlit){
   y = inY;
   blit = inBlit;
   dead = false;
-  hunger = 500;
+  hunger = 200;
+  hungry = false;
 }
 
 void hungerTick(Creature* creature){
@@ -71,6 +72,9 @@ void Creature::findFood(Map* map){
   int targetX = 0;
   int targetY = 0;
 
+  // Exit if we are on our way
+  if (this->hungry == true) return;
+
   // Empty the current list
   this->emptyList();
 
@@ -84,6 +88,9 @@ void Creature::findFood(Map* map){
     }
   }
   this->move(targetX, targetY, map);
+  
+  // Setting the hungry flag
+  hungry = true;
 }
 
 // Everything that is needed to move a creature one step 

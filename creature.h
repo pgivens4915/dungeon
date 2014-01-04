@@ -30,6 +30,7 @@ class Creature{
     // Hunger should be a value from 0 to 100
     int hunger;
     bool dead;
+    bool hungry;
   private:
     char blit;
 
