@@ -96,3 +96,9 @@ int Map::drawMap(WINDOW* window){
     }    
   }
 }
+
+// Removes an Item from the list
+void Map::remove(Item* item){
+  itemList.remove(item);
+  delete item;
+}

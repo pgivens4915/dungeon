@@ -46,7 +46,7 @@ Creature::Creature(int inX, int inY, char inBlit){
   y = inY;
   blit = inBlit;
   dead = false;
-  hunger = 2000;
+  hunger = 300;
   hungry = false;
 }
 
@@ -58,8 +58,9 @@ void hungerTick(Creature* creature){
 }
 
 // Eats an item
-void Creature::eat(Item* item){
+void Creature::eat(Item* item, Map* map){
   hunger += 1000;
+  map->remove(item);
 }
 
 // Checks to see if we are on top of food, and if so, eat it
@@ -70,7 +71,8 @@ bool Creature::onFood(Map* map){
     // Are we on some food
     if(x == (*it)->x && y == (*it)->y && (*it)->blit == 'f'){
       // Eat the item
-      eat(*it);
+      // Pun not intended
+      eat(*it, map);
       return true;
     }
   }

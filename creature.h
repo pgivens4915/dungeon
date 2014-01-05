@@ -43,7 +43,7 @@ class Creature{
     void findFood(Map* map);
     // Determines if we are on some food
     bool onFood(Map* map);
-    void eat(Item* item);
+    void eat(Item* item, Map* map);
 };
 
 #endif
