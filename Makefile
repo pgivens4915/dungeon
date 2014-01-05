@@ -13,4 +13,4 @@ Item.o : item.cpp item.h
 	g++ -pg -c -g item.cpp -o Item.o
 
 clean :
-	rm *.o Dungeon
+	rm *.o Dungeon *.txt *.log *.out
