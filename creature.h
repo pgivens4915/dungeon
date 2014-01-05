@@ -4,6 +4,7 @@
 #include <stack>
 #include <list>
 #include "map.h"
+#include "item.h"
 #define MAX_PATH 5000
 
 class Map;
@@ -40,6 +41,9 @@ class Creature{
     // TODO : Maybe not euclidian
     // Finds a path to the closest(Euclidian) food
     void findFood(Map* map);
+    // Determines if we are on some food
+    bool onFood(Map* map);
+    void eat(Item* item);
 };
 
 #endif

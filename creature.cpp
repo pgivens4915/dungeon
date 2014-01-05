@@ -57,8 +57,23 @@ void hungerTick(Creature* creature){
   }
 }
 
+// Eats an item
+void Creature::eat(Item* item){
+  hunger += 1000;
+}
+
 // Checks to see if we are on top of food, and if so, eat it
-bool onFood(Map* map){
+bool Creature::onFood(Map* map){
+  std::list<Item*>::iterator it;
+  
+  for(it = map->itemList.begin(); it != map->itemList.end(); it++){
+    // Are we on some food
+    if(x == (*it)->x && y == (*it)->y && (*it)->blit == 'f'){
+      // Eat the item
+      eat(*it);
+      return true;
+    }
+  }
   return false;
 }
 
@@ -106,8 +121,8 @@ int Creature::step(Map* map){
   }
 
   // If we are hungry what do we do
-  if(hunger < 100){
-    // Funny syntax, eat the food if we are on it else, walk to it
+  if(hunger < 300){
+    // Funny syntax, eat the food if we are on it else walk to it
     if (onFood(map));
     else findFood(map);
   }
