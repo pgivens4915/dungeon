@@ -15,7 +15,7 @@
 FILE* log;
 int main(){
   // Declarations
-  int gameStep(WINDOW* mainWindow, Map map, bool paused);
+  int gameStep(WINDOW* mainWindow, Map* map, bool paused);
   Map map;
   WINDOW *mainWindow;
   int retval;
@@ -30,6 +30,7 @@ int main(){
   
   map.addCreature(1, 1, 'r');
   map.addItem(6,6,'f', 10);
+  map.addItem(20,20,'f',10);
   log = fopen("log.txt", "w");
 
   // ncurses intit
@@ -37,7 +38,7 @@ int main(){
   nodelay(mainWindow, TRUE);
   
   for(;;){
-    paused = gameStep(mainWindow, map, paused);
+    paused = gameStep(mainWindow, &map, paused);
   }
  
   endwin();
@@ -60,7 +61,7 @@ bool pausedLoop(){
 }
 
 // Takes a single step of the game
-int gameStep(WINDOW* mainWindow, Map map, bool paused){
+int gameStep(WINDOW* mainWindow, Map* map, bool paused){
   const double second = 1000000;
   std::list<Creature*>::iterator i;
   int retVal;
@@ -75,11 +76,11 @@ int gameStep(WINDOW* mainWindow, Map map, bool paused){
   startTime = timeQuery.ru_stime;
 
   // Draw everything
-  map.drawMap(mainWindow);
+  map->drawMap(mainWindow);
   // Draw all the creatures
-  map.drawMoveCreatures(mainWindow);
+  map->drawMoveCreatures(mainWindow);
   // Draw the items
-  map.drawItems(mainWindow);
+  map->drawItems(mainWindow);
   refresh();
 
   if (paused){

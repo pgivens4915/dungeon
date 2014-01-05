@@ -74,6 +74,12 @@ int Map::drawMoveCreatures(WINDOW* window){
       //delete(*it);
     }
     else{
+      std::list<Item*>::iterator ij;
+      int i = 0;
+      for(ij = itemList.begin(); ij != itemList.end(); ij++){
+        mvprintw(21, 0 + i*8, ":%i,%i", (*ij)->x, (*ij)->y);
+        i++;
+      }
       (*it)->step(this);
       (*it)->drawCreature(window);
     }

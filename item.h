@@ -6,6 +6,7 @@
 class Item{
   public:
     Item(int x, int y, char blit, int amount);
+    ~Item();
 
     // Functions
     void draw(WINDOW* window);

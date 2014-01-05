@@ -61,6 +61,9 @@ void hungerTick(Creature* creature){
 void Creature::eat(Item* item, Map* map){
   hunger += 1000;
   map->remove(item);
+   
+                  
+  hungry = false;
 }
 
 // Checks to see if we are on top of food, and if so, eat it
@@ -125,7 +128,9 @@ int Creature::step(Map* map){
   // If we are hungry what do we do
   if(hunger < 300){
     // Funny syntax, eat the food if we are on it else walk to it
-    if (onFood(map));
+    if (onFood(map)){
+    }
+
     else findFood(map);
   }
 
