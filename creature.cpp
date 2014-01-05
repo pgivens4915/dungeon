@@ -46,7 +46,7 @@ Creature::Creature(int inX, int inY, char inBlit){
   y = inY;
   blit = inBlit;
   dead = false;
-  hunger = 200;
+  hunger = 2000;
   hungry = false;
 }
 
