@@ -1,8 +1,9 @@
 Monster system
   Hunger
-    From 1 - 100
+    From 1 - 1000 ???
     Replenised by eating
   Random wandering
+  Vision system
 
 Dungeon system
   Objects
@@ -10,4 +11,5 @@ Dungeon system
       Destroyed by eating
     Treasure
       Randomly generated with inclination to be in certain areas
+
 

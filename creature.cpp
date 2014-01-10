@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <unordered_map>
 #include <cstdlib>
 #include <float.h>
 #include <cmath>
@@ -180,8 +181,8 @@ int Creature::step(Map* map){
 
 // This function is our A* algorithm
 int Creature::move(int targetX, int targetY, Map* map){
-  std::list<struct Tile> openList;
-  std::list<struct Tile> closedList;
+  std::unordered_map<int, Tile> openList;
+  std::unordered_map<int, Tile> closedList;
   std::list<struct Tile>::iterator iterator; 
   // Becuase I dont want to malloc =)
   struct Tile aTile;
