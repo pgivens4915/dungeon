@@ -25,10 +25,11 @@ struct Tile{
 // Function Declarations //////////////////////////////////////////////////////
 double estimate(int x, int y, int targetX, int targetY);
 void returnPath(struct Tile* currentTile);
-void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-    std::list<struct Tile>* closedlist, Map* map, int targetX, 
+void addNeighbors(struct Tile* currentTile, 
+    std::unordered_map<int, Tile>* openList,
+    std::unordered_map<int, Tile>* closedlist, Map* map, int targetX, 
     int targetY);
-std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList);
+std::unordered_map<int, Tile>::iterator lowestCost(std::unordered_map<int, Tile>* openList);
 ///////////////////////////////////////////////////////////////////////////////
 
 Creature::~Creature(){
@@ -165,6 +166,10 @@ int Creature::step(Map* map){
   return(0);
 }
 
+int cartToInt(int x, int y){
+  return(x * 1000 + y);
+}
+
 // Prints some lists for debuging reasons
 //void printLists(FILE* logg, std::list<struct Tile>* openList,
 //                std::list<struct Tile>* closedList){
@@ -183,10 +188,12 @@ int Creature::step(Map* map){
 int Creature::move(int targetX, int targetY, Map* map){
   std::unordered_map<int, Tile> openList;
   std::unordered_map<int, Tile> closedList;
-  std::list<struct Tile>::iterator iterator; 
+  std::unordered_map<int, Tile>::iterator iterator; 
   // Becuase I dont want to malloc =)
   struct Tile aTile;
   struct Tile* currentTile = &aTile;
+  // The key value
+  int key = cartToInt(x,y);
 
   // Initilize the starting tile
   currentTile->x = x;
@@ -203,7 +210,7 @@ int Creature::move(int targetX, int targetY, Map* map){
   }
 
   // Add the starting tile to the open list
-  openList.push_front(*currentTile);
+  openList.insert({key,*currentTile});
 
   // While we have no options left
   while(!openList.empty()){
@@ -213,9 +220,9 @@ int Creature::move(int targetX, int targetY, Map* map){
     // Delete that node from the open list
     openList.erase(iterator);
     // Put it on the closed list
-    closedList.push_front(*iterator);
+    closedList.insert(*iterator);
     // It is your new current tile
-    currentTile = &(*iterator);
+    currentTile = &(iterator->second);
     // If we have reached are target exit
     if(currentTile->x == targetX && currentTile->y == targetY) break;
     // Adds the neighbors of the tile to the open list
@@ -225,6 +232,7 @@ int Creature::move(int targetX, int targetY, Map* map){
   }
   // Returns the path to the movement stack
   if(!openList.empty()) returnPath(currentTile);
+  return(0);
 }
 
 // Returns the path constructed from A* and adds it to the creatures movement
@@ -261,25 +269,27 @@ bool contains(std::list<struct Tile>* list, int x, int y){
 // Checks all adjacent neighbors,  if a move is valid and they are not on the 
 // open list it moves them onto the open list.  Else if it is valid and not on
 // the closed list, adjust the parent if the path is shorter
-void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
-    std::list<struct Tile>* closedList, Map* map, int targetX, 
+void addNeighbors(struct Tile* currentTile, 
+    std::unordered_map<int, Tile>* openList,
+    std::unordered_map<int, Tile>* closedList, Map* map, int targetX, 
     int targetY){
 
   // Declarations
+  int key;
   struct Tile newTile;
   bool onOpenList;
   bool onClosedList;
-  std::list<struct Tile>::iterator it;
+  std::unordered_map<int, Tile>::iterator it;
 
   // For all adjacent tiles
   for(int i = -1; i < 2; i++){
     for(int j = -1; j < 2; j++){
       // Checking to see if they are on the lists
-      // Set flags appropriatly
-      onOpenList = contains(openList, currentTile->x + j, 
-          currentTile->y + i);
-      onClosedList = contains(closedList, currentTile->x + j, 
-          currentTile->y + i);
+      // Set flags appropriatly, if nothing exists, the flag should
+      // be zero
+      key = cartToInt(currentTile->x + j, currentTile->y + i);
+      onOpenList = openList->count(key); 
+      onClosedList = closedList->count(key);
 
       // If it is not the current tile, passalbe, and not on the list
       // That means the node is new
@@ -300,7 +310,8 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
         newTile.parent = currentTile;
 
         // Add that new tile to the open list
-        openList->push_front(newTile);
+        key = cartToInt(newTile.x, newTile.y);
+        openList->insert({key, newTile});
       }
 
       // Else if it is on the open list make sure we have the shortest cost 
@@ -308,18 +319,15 @@ void addNeighbors(struct Tile* currentTile, std::list<struct Tile>* openList,
           map->map[currentTile->y + i][currentTile->x + j] != 'X' && 
           !onClosedList){
 
-        // Find the right item
-        for(it = openList->begin(); it != openList->end(); it++){
-          // If it matches the x y coord
-          if(it->x == currentTile->x + j && it->y == currentTile->y + i){
-            // If we have found a shorter path
-            // TODO: Better metrics here
-            if(it->G > currentTile->G + 1){
-              it->G = currentTile->G + 1;
-              // Setting the parent
-              it->parent = currentTile; 
-            }
-          }
+        //Find the right item
+        key = cartToInt(currentTile->x + j, currentTile->y + i);
+        it = openList->find(key);
+        // If we have found a shorter path
+        // TODO: Better metrics here
+        if(it->second.G > currentTile->G + 1){
+          it->second.G = currentTile->G + 1;
+          // Setting the parent
+          it->second.parent = currentTile; 
         }
       }
     }
@@ -335,9 +343,12 @@ double estimate(int x, int y, int targetX, int targetY){
 }
 
 // Returns the lowest cost tile in the open list
-std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
-  std::list<struct Tile>::iterator it; 
-  std::list<struct Tile>::iterator iteratorPosition; 
+std::unordered_map<int,Tile>::iterator lowestCost(
+    std::unordered_map<int, Tile>* openList){
+
+  //Declarations
+  std::unordered_map<int, Tile>::iterator it; 
+  std::unordered_map<int, Tile>::iterator iteratorPosition; 
 
   // Initiate the largest tile, in this case zero
   struct Tile smallestMalloc;
@@ -348,10 +359,10 @@ std::list<struct Tile>::iterator lowestCost(std::list<struct Tile>* openList){
   // For every item on the list
   for(it = openList->begin(); it != openList->end(); it++){
     // If it is smaller
-    if (it->F < smallest->F){
+    if (it->second.F < smallest->F){
       // Pointer assignment, smallest should point to a member of the 
       // list that was passed in
-      smallest = &(*it);
+      smallest = &(it->second);
       iteratorPosition = it;
     }
   }

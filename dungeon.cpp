@@ -64,7 +64,6 @@ bool pausedLoop(){
 int gameStep(WINDOW* mainWindow, Map* map, bool paused){
   const double second = 1000000;
   std::list<Creature*>::iterator i;
-  int retVal;
   int microSeconds;
   char c;
   struct rusage timeQuery;

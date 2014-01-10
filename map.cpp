@@ -45,6 +45,7 @@ int Map::addCreature(int x, int y, char type){
   Creature* creaturePoint;
   creaturePoint = new Creature(x, y, type);
   creatureList.push_front(creaturePoint);
+  return(0);
 }
 
 // Adding an item
@@ -84,6 +85,7 @@ int Map::drawMoveCreatures(WINDOW* window){
       (*it)->drawCreature(window);
     }
   }
+  return(0);
 }
 
 // Prints out the entire map
@@ -101,6 +103,7 @@ int Map::drawMap(WINDOW* window){
       mvaddch(i,j, map[i][j]);
     }    
   }
+  return(0);
 }
 
 // Removes an Item from the list
