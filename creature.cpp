@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <math.h>
 #include <unistd.h>
 #include <unordered_map>
 #include <cstdlib>
@@ -117,8 +118,8 @@ void Creature::findFood(Map* map){
 }
 
 // Recursive algorithm for sight
-void Creature::shadowCast(Map* map, int startAngle, int endAngle, int startX,
-                int startY, int endX, int endY, int range){
+void Creature::shadowCast(Map* map, double startSlope, double endSlope,
+                          int range){
   int i = 0;
   double slope = -1;
   double j = 0;
@@ -134,7 +135,7 @@ void Creature::shadowCast(Map* map, int startAngle, int endAngle, int startX,
 // The creatures shadowcasting algorithm
 void Creature::look(Map* map){
   // First octant
-  shadowCast(map, -45, 0, x - 1, y - 1, x, y - 1, 5);
+  shadowCast(map, -1, INFINITY, 5);
 }
 
 // Everything that is needed to move a creature one step 
