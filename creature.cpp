@@ -115,6 +115,17 @@ void Creature::findFood(Map* map){
   hungry = true;
 }
 
+// Recursive algorithm for sight
+void Creature::shadowCast(Map* map, int startAngle, int endAngle, int startX,
+                int startY, int endX, int endY){
+}
+
+// The creatures shadowcasting algorithm
+void Creature::look(Map* map){
+  // First octant
+  shadowCast(map, 45, 0, x + 1, y - 1, x, y - 1);
+}
+
 // Everything that is needed to move a creature one step 
 // Patfinding happens here if it is needed
 int Creature::step(Map* map){
@@ -126,6 +137,9 @@ int Creature::step(Map* map){
   if (map == NULL){
     return(0);
   }
+
+  // Look around
+  look(map);
 
   // If we are hungry what do we do
   if(hunger < 300){

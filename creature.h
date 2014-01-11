@@ -44,6 +44,11 @@ class Creature{
     // Determines if we are on some food
     bool onFood(Map* map);
     void eat(Item* item, Map* map);
+    // Vision system
+    void look(Map* map);
+    // Shadow casting recursive alg
+    void shadowCast(Map* map, int startAngle, int endAngle, int startX,
+                    int startY, int endX, int endY);
 };
 
 #endif
