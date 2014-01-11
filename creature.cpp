@@ -119,21 +119,22 @@ void Creature::findFood(Map* map){
 // Recursive algorithm for sight
 void Creature::shadowCast(Map* map, int startAngle, int endAngle, int startX,
                 int startY, int endX, int endY, int range){
-  // Declarations
-  int i;
+  int i = 0;
+  double slope = -1;
+  double j = 0;
 
-  // From left to right
-  for(i = startX; i <= endX; i++){
-    mvprintw(20,0, "DEBUG DEBUG DEBUG");
-    mvprintw(startY, i, "*");
-    refresh();
+  for(i = 1; i < range; i++){
+    // From the first seen slope to the last
+    for(j = i/slope; j <= 0; j++){
+      mvprintw(y - i, x + j, "*");
+    }
   }
 }
 
 // The creatures shadowcasting algorithm
 void Creature::look(Map* map){
   // First octant
-  shadowCast(map, 45, 0, x - 1, y - 1, x, y - 1, 5);
+  shadowCast(map, -45, 0, x - 1, y - 1, x, y - 1, 5);
 }
 
 // Everything that is needed to move a creature one step 
