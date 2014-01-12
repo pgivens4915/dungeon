@@ -47,7 +47,8 @@ class Creature{
     // Vision system
     void look(Map* map);
     // Shadow casting recursive alg
-    void shadowCast(Map* map, double startSlope, double endSlope, int range); 
+    void shadowCast(Map* map, double startSlope, double endSlope, int range,
+                    int xAdjust, int yAdjust); 
 };
 
 #endif
