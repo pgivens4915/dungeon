@@ -122,12 +122,18 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
                           int range){
   int i = 0;
   double slope = -1;
-  double j = 0;
+  double jEstimate = 0;
+  int j;
 
   for(i = 1; i < range; i++){
     // From the first seen slope to the last
-    for(j = i/slope; j <= 0; j++){
-      mvprintw(y - i, x + j, "*");
+    jEstimate = i / slope;
+    for(j = round(jEstimate); j <= 0; j++){
+      // If the view is not obscured
+      if (map->map[y-i][x+j] != 'X'){
+        // Do what needs to be done
+        mvprintw(y - i, x + j, "*");
+      }
     }
   }
 }
