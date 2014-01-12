@@ -120,15 +120,16 @@ void Creature::findFood(Map* map){
 // Recursive algorithm for sight
 void Creature::shadowCast(Map* map, double startSlope, double endSlope,
                           int range){
+  double jFinish = 0;
+  double jStart = 0;
   int i = 0;
-  double slope = -1;
-  double jEstimate = 0;
-  int j;
+  int j = 0;
 
   for(i = 1; i < range; i++){
     // From the first seen slope to the last
-    jEstimate = i / slope;
-    for(j = round(jEstimate); j <= 0; j++){
+    jStart = i / startSlope;
+    jFinish = i / endSlope;
+    for(j = round(jStart); j <= jFinish; j++){
       // If the view is not obscured
       if (map->map[y-i][x+j] != 'X'){
         // Do what needs to be done
