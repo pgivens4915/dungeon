@@ -123,6 +123,7 @@ void Creature::findFood(Map* map){
 void Creature::shadowCast(Map* map, double startSlope, double endSlope,
                           int range, int startX, int startY){
   double newEndSlope;
+  double newStartSlope;
   double jFinish = 0;
   double jStart = 0;
   int i = 0;
@@ -142,8 +143,16 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
         // Calculate the angle in radians
         newEndSlope = (double)i/(double)(j - 1);
         mvprintw(20 + range, 0, "%f %i %i" , newEndSlope, j, i);
-        shadowCast(map, startSlope, newEndSlope, i, startX, startY);
-        return;
+        shadowCast(map, startSlope, newEndSlope, i + 1, startX, startY);
+        while(map->map[startY - i][startX + j] == 'X'){
+          j++;
+          if (j > jFinish) return;
+          else{
+            newStartSlope = (double)i/(double)j;
+            shadowCast(map, newStartSlope, endSlope, i, startX, startY);
+            return;
+          }
+        }
       }
     }
   }
