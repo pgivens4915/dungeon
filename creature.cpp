@@ -150,7 +150,7 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
 // The creatures shadowcasting algorithm
 void Creature::look(Map* map){
   // First octant
-  shadowCast(map, -1, INFINITY, 5, x, y);
+  shadowCast(map, -1, INFINITY, 7, x, y);
 }
 
 // Everything that is needed to move a creature one step 
