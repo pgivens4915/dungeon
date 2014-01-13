@@ -8,6 +8,8 @@
 #include <climits>
 #include "creature.h"
 
+#define VISION_RANGE 7
+
 FILE* logg;
 
 // A structure to hold the tile information for the A* Alg
@@ -126,7 +128,7 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
   int i = 0;
   int j = 0;
 
-  for(i = 1; i < range; i++){
+  for(i = range; i < VISION_RANGE; i++){
     // From the first seen slope to the last
     jStart = i / startSlope;
     jFinish = i / endSlope;
@@ -140,7 +142,7 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
         // Calculate the angle in radians
         newEndSlope = (double)i/(double)(j - 1);
         mvprintw(20 + range, 0, "%f %i %i" , newEndSlope, j, i);
-        shadowCast(map, startSlope, newEndSlope, range - i, startX + j - 1, startY - i);
+        shadowCast(map, startSlope, newEndSlope, i, startX, startY);
         return;
       }
     }
@@ -150,7 +152,7 @@ void Creature::shadowCast(Map* map, double startSlope, double endSlope,
 // The creatures shadowcasting algorithm
 void Creature::look(Map* map){
   // First octant
-  shadowCast(map, -1, INFINITY, 7, x, y);
+  shadowCast(map, -1, INFINITY, 0, x, y);
 }
 
 // Everything that is needed to move a creature one step 
